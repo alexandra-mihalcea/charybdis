@@ -1,0 +1,77 @@
+html, body {
+  background: #000;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #242424, #000);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #242424, #000);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #eceeef;
+  font-family: 'Quicksand', sans-serif;
+  overflow: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  font-weight: normal; }
+
+.overlay {
+  background: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2; }
+
+.container-clock {
+  z-index: 3;
+  padding: 70vw; }
+
+.container-bar {
+  text-align: right;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  z-index: 999; }
+  .container-bar.container-bar-bottom {
+    bottom: 0; }
+  .container-bar.container-bar-top {
+    top: 0; }
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; }
+
+#clock {
+  font-size: 11em;
+  margin: 0; }
+
+#date {
+  font-size: 3em;
+  margin: 0; }
+
+#background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  rigth: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -99;
+  background-position: center;
+  background-size: cover; }
+
+.small-button {
+  color: #C9CBCC;
+  font-size: 2.7em;
+  padding: 5px;
+  cursor: pointer; }
+  .small-button:hover, .small-button:focus {
+    color: #eceeef; }
+
+/*# sourceMappingURL=main.css.map */

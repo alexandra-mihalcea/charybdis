@@ -1,0 +1,102 @@
+$background-color-primary: #000;//#232526;
+$background-color-secondary: #242424;
+
+$font-color-primary: #eceeef;
+$font-color-secondary: #C9CBCC;
+
+//fonts
+//@font-face {
+//    font-family: 'Quicksand';
+//  font-family: normal;
+//  font-weight: 500;
+//    src: url('../fonts/quicksand-v8-latin-500.svg') format('svg');
+// }
+
+
+html, body{
+  background: $background-color-primary;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, $background-color-secondary, $background-color-primary);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, $background-color-secondary, $background-color-primary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: $font-color-primary;
+  font-family: 'Quicksand', sans-serif;
+  overflow: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  font-weight: normal;
+}
+
+.overlay{
+  background: transparentize($background-color-primary, 0.3);
+  position: absolute;
+  width:100vw;
+  height:100vh;
+  top:0;
+  bottom: 0;
+  left:0;
+  right:0;
+  z-index: 2;
+}
+.container-clock{
+  //background: transparentize($background-color-primary, 0.3);
+  //border-radius: 50%;
+  z-index: 3;
+  padding: 70vw;
+}
+
+.container-bar{
+  text-align: right;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  z-index: 999;
+
+  &.container-bar-bottom{
+    bottom:0;
+  }
+
+  &.container-bar-top{
+    top:0;
+  }
+}
+
+
+.centered{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#clock{
+  font-size: 11em;
+  margin: 0;
+}
+
+#date{
+  font-size: 3em;
+  margin: 0;
+}
+#background{
+  position:absolute;
+  top:0;
+  left:0;
+  rigth:0;
+  bottom:0;
+  width:100vw;
+  height: 100vh;
+  z-index: -99;
+  background-position: center;
+  background-size: cover;
+}
+
+.small-button{
+  color: $font-color-secondary;
+  font-size: 2.7em;
+  padding: 5px;
+  cursor: pointer;
+  &:hover, &:focus{
+    color: $font-color-primary;
+  }
+}
