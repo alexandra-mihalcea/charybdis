@@ -1,12 +1,12 @@
 //declare API keys
-const wallpaperAbyssApiKey = '';
+const wallpaperAbyssApiKey = ''
 
 //global variables
 let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
-var wHistory = []
-var wHistoryPos = 0
+let wHistory = []
+let wHistoryPos = 0
 
 $(document).ready(function(){
     getHistory()
@@ -54,7 +54,7 @@ function getWallpaper(refresh = false){
         const now =  new moment()
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
-        if(duration.asMinutes() > 5 || refresh) {
+        if(duration.asMinutes() > 0 || refresh) {
             const timestamp = new moment().toISOString()
             chrome.storage.local.set({'wallpaperLastChanged': timestamp}, function () {
                 $.ajax({
@@ -89,18 +89,14 @@ function getHistory(){
     chrome.storage.local.get('wallpaperHistory', function(result) {
         wHistory  = result.wallpaperHistory
         wHistoryPos  = wHistory.length-1
-        // if(false){//temp.indexOf(',') > -1 && flase) {
-        //     console.log('wallpaperHistory:', temp)
-        //     wHistory = temp.split(',')
-        // }
-        // wHistory = []
     })
 }
 
 function setHistory(item){
+    debugger;
     if(item) {
         if (wHistory.length >= 10) {
-            wHistory = wHistory.slice(wHistory.length - 10, wHistory.length - 1)
+            wHistory = wHistory.slice(wHistory.length - 9, wHistory.length)
         }
         wHistory.push(item)
         wHistoryPos = wHistory.length - 1
