@@ -4,14 +4,8 @@ $background-color-secondary: #242424;
 $font-color-primary: #eceeef;
 $font-color-secondary: #C9CBCC;
 
-//fonts
-//@font-face {
-//    font-family: 'Quicksand';
-//  font-family: normal;
-//  font-weight: 500;
-//    src: url('../fonts/quicksand-v8-latin-500.svg') format('svg');
-// }
-
+//settings-menu
+$settings-menu-width:400px;
 
 html, body{
   background: $background-color-primary;  /* fallback for old browsers */
@@ -69,6 +63,22 @@ html, body{
   text-align: center;
 }
 
+.sidemenu {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  &.open{
+    width: $settings-menu-width;
+  }
+}
+
 #clock{
   font-size: 11em;
   margin: 0;
@@ -79,6 +89,7 @@ html, body{
   margin: 0;
 }
 #background{
+  transition: margin-left .5s;
   position:absolute;
   top:0;
   left:0;
@@ -89,6 +100,9 @@ html, body{
   z-index: -99;
   background-position: center;
   background-size: cover;
+  &.menu-open{
+    margin-left: -$settings-menu-width;
+  }
 }
 
 .small-button{
