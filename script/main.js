@@ -5,8 +5,12 @@ const wallpaperAbyssApiKey = ''
 let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
+let settings = {}
 let wHistory = []
 let wHistoryPos = 0
+let menu = false
+
+let dataStorage = 'local'
 
 $(document).ready(function(){
     getHistory()
@@ -21,6 +25,16 @@ $(document).ready(function(){
     })
     $('#historyBack').click(function(){
         browseHistory(-1)
+    })
+    $('#settings').click(function(){
+        if(!menu){
+            openMenu()
+        }
+        else{
+            closeMenu()
+
+        }
+        menu = !menu
     })
 
 
@@ -93,7 +107,6 @@ function getHistory(){
 }
 
 function setHistory(item){
-    debugger;
     if(item) {
         if (wHistory.length >= 10) {
             wHistory = wHistory.slice(wHistory.length - 9, wHistory.length)
@@ -118,3 +131,24 @@ function browseHistory(amount = 1){
 
     }
 }
+
+function getHistory(){
+    chrome.storage.local.get('settings', function(result) {
+        settings = result
+    })
+}
+
+function updateHistory(){
+    chrome.storage.local.set({'settings': settings})
+}
+
+function openMenu() {
+    $('#settingsMenu').addClass('open')
+    $('#background').addClass('menu-open')
+}
+
+function closeMenu() {
+    $('#settingsMenu').addClass('open')
+    $('#background').removeClass('menu-open')
+}
+

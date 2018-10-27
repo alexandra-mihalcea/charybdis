@@ -46,6 +46,20 @@ html, body {
   transform: translate(-50%, -50%);
   text-align: center; }
 
+.sidemenu {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px; }
+  .sidemenu.open {
+    width: 400px; }
+
 #clock {
   font-size: 11em;
   margin: 0; }
@@ -55,6 +69,7 @@ html, body {
   margin: 0; }
 
 #background {
+  transition: margin-left .5s;
   position: absolute;
   top: 0;
   left: 0;
@@ -65,6 +80,8 @@ html, body {
   z-index: -99;
   background-position: center;
   background-size: cover; }
+  #background.menu-open {
+    margin-left: -400px; }
 
 .small-button {
   color: #C9CBCC;
