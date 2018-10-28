@@ -1,5 +1,5 @@
 //declare API keys
-const wallpaperAbyssApiKey = ''
+let wallpaperAbyssApiKey = ''
 
 //global variables
 let img_url = ''
@@ -13,6 +13,10 @@ let menu = false
 let dataStorage = 'online'
 
 $(document).ready(function(){
+    getStorage('wallpaperAbyssApiKey', function(response){
+        wallpaperAbyssApiKey = response.wallpaperAbyssApiKey
+        $('input').val(response.wallpaperAbyssApiKey)
+    })
     trackStorage()
     getHistory()
     startTime()
@@ -37,7 +41,11 @@ $(document).ready(function(){
         }
         menu = !menu
     })
-
+    $('input').change(function(){
+        const id = $(this).attr('id')
+        const value = $(this).val()
+        setStorage(id, value)
+    })
 
 })
 
@@ -106,7 +114,7 @@ function openMenu() {
 }
 
 function closeMenu() {
-    $('#settingsMenu').addClass('open')
+    $('#settingsMenu').removeClass('open')
     $('#background').removeClass('menu-open')
 }
 

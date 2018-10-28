@@ -70,7 +70,7 @@ html, body{
   position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  right: 0;
   background-color: #111;
   overflow-x: hidden;
   transition: 0.5s;
@@ -78,6 +78,14 @@ html, body{
   &.open{
     width: $settings-menu-width;
   }
+  .menu-group{
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+.container{
+  padding: 20px;
 }
 
 #clock{

@@ -53,13 +53,19 @@ html, body {
   position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  right: 0;
   background-color: #111;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px; }
   .sidemenu.open {
     width: 400px; }
+  .sidemenu .menu-group {
+    margin: 0 auto;
+    text-align: center; }
+
+.container {
+  padding: 20px; }
 
 #clock {
   font-size: 11em;
