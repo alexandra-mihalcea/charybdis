@@ -10,9 +10,10 @@ let wHistory = []
 let wHistoryPos = 0
 let menu = false
 
-let dataStorage = 'local'
+let dataStorage = 'online'
 
 $(document).ready(function(){
+    trackStorage()
     getHistory()
     startTime()
     formatDate()
@@ -64,13 +65,13 @@ function randomInt(min, max){
 }
 
 function getWallpaper(refresh = false){
-    chrome.storage.local.get('wallpaperLastChanged', function(result) {
+    getStorage('wallpaperLastChanged', function(result) {
         const now =  new moment()
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
         if(duration.asMinutes() > 0 || refresh) {
             const timestamp = new moment().toISOString()
-            chrome.storage.local.set({'wallpaperLastChanged': timestamp}, function () {
+            setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
                     //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
                     url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + wallpaperAbyssApiKey + '&method=category&id=3&page=' + randomInt(1, 1000),
@@ -86,8 +87,7 @@ function getWallpaper(refresh = false){
                         console.log('Bummer: there was an error!')
                     }
                 })
-            })
-        }
+           }
         else{
             updateBackground(wHistory[wHistory.length - 1])
         }
@@ -99,48 +99,6 @@ function updateBackground(img){
     $('#download').attr('href', img)
 }
 
-function getHistory(){
-    chrome.storage.local.get('wallpaperHistory', function(result) {
-        wHistory  = result.wallpaperHistory
-        wHistoryPos  = wHistory.length-1
-    })
-}
-
-function setHistory(item){
-    if(item) {
-        if (wHistory.length >= 10) {
-            wHistory = wHistory.slice(wHistory.length - 9, wHistory.length)
-        }
-        wHistory.push(item)
-        wHistoryPos = wHistory.length - 1
-    }
-    chrome.storage.local.set({'wallpaperHistory': wHistory})
-}
-
-function cleanHistory(){
-    wHistory = []
-    chrome.storage.local.set({'wallpaperHistory': wHistory})
-}
-
-function browseHistory(amount = 1){
-    let newPos = wHistoryPos + amount
-    console.log(wHistory[newPos], wHistory.length -1, newPos)
-    if(newPos <= wHistory.length -1 && newPos >= 0 ) {
-        updateBackground(wHistory[newPos])
-        wHistoryPos = newPos
-
-    }
-}
-
-function getHistory(){
-    chrome.storage.local.get('settings', function(result) {
-        settings = result
-    })
-}
-
-function updateHistory(){
-    chrome.storage.local.set({'settings': settings})
-}
 
 function openMenu() {
     $('#settingsMenu').addClass('open')
@@ -152,3 +110,67 @@ function closeMenu() {
     $('#background').removeClass('menu-open')
 }
 
+
+// chrome storage
+
+function trackStorage(){
+    chrome.storage.onChanged.addListener(function (changes, areaName){
+        console.log('storage updated at', moment().format('HH:mm'), ' with the changes', changes, ' in area', areaName)
+    })
+}
+
+function setStorage(key, value){
+    if(dataStorage == 'online'){
+        chrome.storage.sync.set({[key]: value}, function(){})
+    }
+    else{
+        chrome.storage.local.set({[key]: value}, function(){})
+    }
+}
+
+function getStorage(key, callback){
+    if(dataStorage == 'online'){
+        chrome.storage.sync.get([key],  callback)
+    }
+    else{
+        chrome.storage.local.get([key], callback)
+    }
+}
+
+// wallpaper history
+
+function getHistory(){
+   getStorage('wallpaperHistory', function(response) {
+       if (response && response.wallpaperHistory) {
+           wHistory = response.wallpaperHistory
+           wHistoryPos = wHistory.length - 1
+       }
+       else {
+           wHistory = []
+       }
+   })
+}
+
+function setHistory(item){
+    if(item) {
+        if (wHistory.length >= 10) {
+            wHistory = wHistory.slice(wHistory.length - 9, wHistory.length)
+        }
+        wHistory.push(item)
+        wHistoryPos = wHistory.length - 1
+    }
+    setStorage('wallpaperHistory', wHistory)
+}
+
+function cleanHistory(){
+    setStorage('wallpaperHistory', [])
+}
+
+function browseHistory(amount = 1){
+    let newPos = wHistoryPos + amount
+    if(newPos <= wHistory.length -1 && newPos >= 0 ) {
+        updateBackground(wHistory[newPos])
+        wHistoryPos = newPos
+
+    }
+}
