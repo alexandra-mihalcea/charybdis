@@ -1,22 +1,42 @@
-//declare API keys
-let wallpaperAbyssApiKey = ''
-
 //global variables
 let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
-let settings = {}
+let settings = {
+    'wallpaperAbyssApiKey' : '',
+    'wallpaperUpdateEvery': 5
+}
 let wHistory = []
 let wHistoryPos = 0
 let menu = false
 
 let dataStorage = 'online'
 
-$(document).ready(function(){
-    getStorage('wallpaperAbyssApiKey', function(response){
-        wallpaperAbyssApiKey = response.wallpaperAbyssApiKey
-        $('input').val(response.wallpaperAbyssApiKey)
+
+function updateSettings(){
+    getStorage('settings', function(response) {
+        if (response && response.settings) {
+            settings = response.settings
+        }
+        else {
+            setStorage('settings', settings)
+        }
+        const list = Object.keys(settings)
+        list.map(function(key){
+            $('#' + key ).val(settings[key])
+            $('#' + key ).change(function () {
+                const id = $(this).attr('id')
+                const value = $(this).val()
+                settings[id] = value
+                setStorage('settings', settings)
+            })
+        })
     })
+
+}
+
+$(document).ready(function(){
+    updateSettings()
     trackStorage()
     getHistory()
     startTime()
@@ -41,15 +61,9 @@ $(document).ready(function(){
         }
         menu = !menu
     })
-    $('input').change(function(){
-        const id = $(this).attr('id')
-        const value = $(this).val()
-        setStorage(id, value)
-    })
-
 })
 
-function formatDate(){2
+function formatDate(){
     $('#date').html(moment().format("ddd, DD MMM"))
 }
 
@@ -77,12 +91,12 @@ function getWallpaper(refresh = false){
         const now =  new moment()
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
-        if(duration.asMinutes() > 0 || refresh) {
+        if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh) {
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
                     //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
-                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + wallpaperAbyssApiKey + '&method=category&id=3&page=' + randomInt(1, 1000),
+                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id=3&page=' + randomInt(1, 1000),
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
