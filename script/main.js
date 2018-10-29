@@ -6,6 +6,12 @@ let settings = {
     'wallpaperAbyssApiKey' : '',
     'wallpaperUpdateEvery': 5
 }
+let categories = {
+    'list':[],
+    'lastUpdatedAt':'',
+    'active': 3,
+    'pages': 100
+}
 let wHistory = []
 let wHistoryPos = 0
 let menu = false
@@ -15,6 +21,7 @@ let dataStorage = 'online'
 
 function updateSettings(){
     getStorage('settings', function(response) {
+        updateCategories()
         if (response && response.settings) {
             settings = response.settings
         }
@@ -33,6 +40,54 @@ function updateSettings(){
         })
     })
 
+}
+
+function updateCategories(){
+    getStorage('categories', function(res) {
+        categories = res.categories
+        if (!categories || !categories.list) {
+            getCategories()
+        }
+        else{
+            generateCategories()
+        }
+    })
+}
+
+function generateCategories(){
+    categories.list.map(function (obj) {
+        let selected = ''
+        if (obj.id == categories.active){
+            selected = 'selected="selected"'
+        }
+        $('#wallpaperCategories').append(' <option value="' + obj.id + '" '+selected+'>' + obj.name +'</option>')
+    })
+    $('#wallpaperCategories').change(function () {
+        const value = $(this).val()
+        categories.active = value
+        const item = categories.list.find(function(obj){
+            return obj.id == categories.active
+        })
+        categories.pages = Math.floor(item.count/30)
+        setStorage('categories', categories)
+        getWallpaper(true)
+    })
+}
+
+function getCategories(){
+    $.ajax({
+        //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
+        url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category_list',
+        complete: function (response) {
+            const result = JSON.parse(response.responseText)
+            categories.list = result.categories
+            setStorage('categories', categories)
+            generateCategories()
+        },
+        error: function () {
+            console.log('Bummer: there was an error!')
+        }
+    })
 }
 
 $(document).ready(function(){
@@ -96,7 +151,7 @@ function getWallpaper(refresh = false){
             setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
                     //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
-                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id=3&page=' + randomInt(1, 1000),
+                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages),
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
@@ -115,6 +170,7 @@ function getWallpaper(refresh = false){
         }
     })
 }
+
 
 function updateBackground(img){
     $('#background').css('background-image', 'url(' + img + ')')
