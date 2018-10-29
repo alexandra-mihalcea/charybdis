@@ -12,5 +12,5 @@
   "chrome_url_overrides" : {
     "newtab": "tab.html"
   },
-  "permissions": ["activeTab", "https://wall.alphacoders.com/", "storage"]
+  "permissions": ["activeTab", "tabs", "https://wall.alphacoders.com/", "storage"]
 }
