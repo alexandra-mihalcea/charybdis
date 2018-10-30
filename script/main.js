@@ -4,12 +4,13 @@ const dateFormat = 'ddd, DD MMM'
 
 let settings = {
     'wallpaperAbyssApiKey' : '',
-    'wallpaperUpdateEvery': 5
+    'wallpaperUpdateEvery': 5,
+    'preloadedWallpaper': ''
 }
 let categories = {
     'list':[],
     'lastUpdatedAt':'',
-    'active': 3,
+    'active': 1,
     'pages': 100
 }
 let wHistory = []
@@ -68,6 +69,7 @@ function generateCategories(){
         const item = categories.list.find(function(obj){
             return obj.id == categories.active
         })
+        settings.preloadedWallpaper = ''
         categories.pages = Math.floor(item.count/30)
         setStorage('categories', categories)
         getWallpaper(true)
@@ -146,6 +148,11 @@ function getWallpaper(refresh = false){
         const now =  new moment()
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
+        const preloaded = settings.preloadedWallpaper && settings.preloadedWallpaper.url_image
+        if(preloaded) {
+            updateBackground(settings.preloadedWallpaper.url_image)
+            setHistory(settings.preloadedWallpaper.url_image)
+        }
         if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh) {
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
@@ -154,11 +161,14 @@ function getWallpaper(refresh = false){
                     url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages),
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
+                        settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
                         img_url = wallpaper.url_image
                         const website_url = wallpaper.url_page
-                        updateBackground(img_url)
-                        setHistory(img_url)
+                        if(!preloaded) {
+                            updateBackground(img_url)
+                            setHistory(img_url)
+                        }
                     },
                     error: function () {
                         console.log('Bummer: there was an error!')
