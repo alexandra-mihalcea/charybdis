@@ -45,12 +45,11 @@ function updateSettings(){
 
 function updateCategories(){
     getStorage('categories', function(res) {
-        categories = res.categories
-        if (!categories || !categories.list) {
-            getCategories()
-        }
-        else{
+        if (res && res.categories && res.categories.list) {
+            categories = res.categories
             generateCategories()
+        } else {
+            getCategories()
         }
         getWallpaper()
     })
