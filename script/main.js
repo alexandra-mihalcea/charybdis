@@ -52,6 +52,7 @@ function updateCategories(){
         else{
             generateCategories()
         }
+        getWallpaper()
     })
 }
 
@@ -87,7 +88,7 @@ function getCategories(){
             generateCategories()
         },
         error: function () {
-            console.log('Bummer: there was an error!')
+            console.log('Warning: there was an error!')
         }
     })
 }
@@ -98,15 +99,25 @@ $(document).ready(function(){
     getHistory()
     startTime()
     formatDate()
-    getWallpaper()
     $('#refresh').click(function(){
         getWallpaper(true)
+    })
+    $('#copy').click(function(){
+        let copyText = document.getElementById('clipboardText')
+        //copyText.value = wHistory[wHistory.length -1]
+        copyText.focus()
+        copyText.select()
+        document.execCommand("copy")
     })
     $('#historyForward').click(function(){
         browseHistory(1)
     })
     $('#historyBack').click(function(){
         browseHistory(-1)
+    })
+
+    $('#historyClear').click(function(){
+        clearHistory()
     })
     $('#settings').click(function(){
         if(!menu){
@@ -149,11 +160,12 @@ function getWallpaper(refresh = false){
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
         const preloaded = settings.preloadedWallpaper && settings.preloadedWallpaper.url_image
-        if(preloaded) {
-            updateBackground(settings.preloadedWallpaper.url_image)
-            setHistory(settings.preloadedWallpaper.url_image)
-        }
-        if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh) {
+        if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh || !wHistory.length) {
+            if(preloaded) {
+                updateBackground(settings.preloadedWallpaper.url_image)
+                setHistory(settings.preloadedWallpaper.url_image)
+                settings.preloadedWallpaper = ''
+            }
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
@@ -162,16 +174,16 @@ function getWallpaper(refresh = false){
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
                         settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
+                        setStorage('settings', settings)
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
                         img_url = wallpaper.url_image
-                        const website_url = wallpaper.url_page
                         if(!preloaded) {
                             updateBackground(img_url)
                             setHistory(img_url)
                         }
                     },
                     error: function () {
-                        console.log('Bummer: there was an error!')
+                        console.log('Warning: there was an error!')
                     }
                 })
            }
@@ -185,7 +197,9 @@ function getWallpaper(refresh = false){
 function updateBackground(img){
     $('#background').css('background-image', 'url(' + img + ')')
     $('#download').attr('href', img)
+    $('#clipboardText').val(img)
 }
+
 
 
 function openMenu() {
@@ -250,7 +264,8 @@ function setHistory(item){
     setStorage('wallpaperHistory', wHistory)
 }
 
-function cleanHistory(){
+function clearHistory(){
+    wHistory = []
     setStorage('wallpaperHistory', [])
 }
 

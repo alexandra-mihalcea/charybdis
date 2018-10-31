@@ -10,15 +10,18 @@
     <link rel="stylesheet" href="style/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
     <script src="script/main.js"></script>
 </head>
 <body>
 <div class="container-bar">
-    <a id="historyBack" class="small-button"><i class="fas fa-arrow-alt-circle-left"></i></a>
-    <a id="historyForward" class="small-button"><i class="fas fa-arrow-alt-circle-right"></i></a>
-    <a id="refresh" class="small-button"><i class="fas fa-sync-alt"></i></a>
-    <a id="download" class="small-button" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
-    <a id="settings" class="small-button"><i class="fa fa-cog"></i></a>
+    <a alt="View previous wallpaper"  id="historyBack" class="small-button"><i class="fas fa-arrow-alt-circle-left"></i></a>
+    <a alt="View next wallpaper" id="historyForward" class="small-button"><i class="fas fa-arrow-alt-circle-right"></i></a>
+    <a alt="Refresh wallpaper" id="refresh" class="small-button"><i class="fas fa-sync-alt"></i></a>
+    <a alt="Download wallpaper" id="download" class="small-button" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
+    <a alt="Copy to clipboard" id="copy" class="small-button" clipboard-text=""><i class="fa fa-copy"></i></a>
+    <textarea id="clipboardText" class="hidden"></textarea>
+    <a alt="Open or close the settings menu" id="settings" class="small-button"><i class="fa fa-cog"></i></a>
 </div>
 <div id="settingsMenu" class="sidemenu">
     <div class="container">
@@ -37,6 +40,10 @@
             <select id="wallpaperCategories">
             </select>
         </div>
+
+        <div class="menu-group">
+            <input type="button" id="historyClear" value="Clear Wallpaper History"/>
+        </div>
     </div>
 
 </div>
@@ -47,5 +54,7 @@
         <h2 id="date"></h2>
     </div>
 </div>
+
+
 </body>
 </html>
