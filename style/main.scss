@@ -21,7 +21,8 @@ html, body{
 }
 
 .overlay{
-  background: transparentize($background-color-primary, 0.3);
+  background-color: $background-color-primary;
+  opacity: 0.7;
   position: absolute;
   width:100vw;
   height:100vh;
@@ -30,6 +31,10 @@ html, body{
   left:0;
   right:0;
   z-index: 2;
+
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
 }
 .container-clock{
   //background: transparentize($background-color-primary, 0.3);
@@ -86,6 +91,21 @@ html, body{
   }
 }
 
+#bookmarksMenu {
+  background:none;
+  position: absolute;
+  margin-left:10px;
+  .bookmark {
+
+    a {
+      img {
+        width: 50px;
+        height: auto;
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+}
 .hidden{
   width: 0;
   height: 0;
@@ -97,6 +117,12 @@ html, body{
 
 .container{
   padding: 20px;
+}
+
+#hexclock{
+  font-size: 1.9em;
+  margin: 0 0 -1em 0;
+  opacity: 0.2;
 }
 
 #clock{
@@ -113,7 +139,7 @@ html, body{
   position:absolute;
   top:0;
   left:0;
-  rigth:0;
+  right:0;
   bottom:0;
   width:100vw;
   height: 100vh;

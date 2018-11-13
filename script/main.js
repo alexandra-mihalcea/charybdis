@@ -5,7 +5,8 @@ const dateFormat = 'ddd, DD MMM'
 let settings = {
     'wallpaperAbyssApiKey' : '',
     'wallpaperUpdateEvery': 5,
-    'preloadedWallpaper': ''
+    'preloadedWallpaper': '',
+    'hexclock': false
 }
 let categories = {
     'list':[],
@@ -13,12 +14,56 @@ let categories = {
     'active': 1,
     'pages': 100
 }
+
+let bookmarks = [
+    {
+        'url':'https://www.reddit.com',
+        'image':'https://i.imgur.com/ws2kAA0.png',
+        'title':'reddit'
+    },
+
+    {
+        'url':'https://www.youtube.com/',
+        'image':'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
+        'title':'youtube'
+    }
+]
+
+let bookmark ={
+    'url': '',
+    'image': '',
+    'title': ''
+}
+
 let wHistory = []
 let wHistoryPos = 0
 let menu = false
 
 let dataStorage = 'online'
 
+const bookmarkTemplate = `
+    <div class="bookmark">
+        <a href="[[URL]]"><img src="[[URL]]"></a>
+    </div>
+`
+
+function generateBookmarks(){
+    if(bookmarks && bookmarks.length){
+        for(let x =0; x< bookmarks.length; x++){
+            let html = bookmarkTemplate.replace('[[URL]]', bookmarks[x].url);
+            html = html.replace('[[URL]]', bookmarks[x].image)
+            $('#bookmarksMenu').append(html)
+        }
+    }
+}
+
+function getBookmarks(){
+
+}
+
+function setBookmarks(){
+
+}
 
 function updateSettings(){
     getStorage('settings', function(response) {
@@ -98,6 +143,7 @@ $(document).ready(function(){
     getHistory()
     startTime()
     formatDate()
+    generateBookmarks();
     $('#refresh').click(function(){
         getWallpaper(true)
     })
@@ -117,6 +163,17 @@ $(document).ready(function(){
 
     $('#historyClear').click(function(){
         clearHistory()
+    })
+    $('#hexClockInput').change(function(){
+        const res = $('#hexClockInput:checked').val()
+        console.log(res)
+        settings.hexclock = res
+        setStorage('settings', settings)
+        if(!res){
+            debugger
+            $('.overlay').css('background-color','unset')
+            document.getElementById('hexclock').innerHTML =''
+        }
     })
     $('#settings').click(function(){
         if(!menu){
@@ -138,11 +195,17 @@ function startTime() {
     let today = new Date()
     let h = today.getHours()
     let m = today.getMinutes()
+    let s = today.getSeconds()
+    if(settings && settings.hexclock){
+        let hextime = '#' + (h * 10000 + m * 100 + s)
+        $('.overlay').css('background',  hextime)
+        document.getElementById('hexclock').innerHTML = hextime
+    }
     h = formatTime(h)
     m = formatTime(m)
     document.getElementById('clock').innerHTML =
         h + ':' + m
-    setTimeout(startTime, 6000)
+    setTimeout(startTime, 1000)
 }
 function formatTime(i) {
     if (i < 10) {i = '0' + i}  // add zero in front of numbers < 10
@@ -169,13 +232,15 @@ function getWallpaper(refresh = false){
             setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
                     //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
-                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages),
+                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages) +'&info_level=3',
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
+                        console.log(result)
                         settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
                         setStorage('settings', settings)
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
                         img_url = wallpaper.url_image
+                        console.log(wallpaper)
                         if(!preloaded) {
                             updateBackground(img_url)
                             setHistory(img_url)
@@ -276,3 +341,4 @@ function browseHistory(amount = 1){
 
     }
 }
+

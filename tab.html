@@ -23,8 +23,14 @@
     <textarea id="clipboardText" class="hidden"></textarea>
     <a alt="Open or close the settings menu" id="settings" class="small-button"><i class="fa fa-cog"></i></a>
 </div>
+<div id="bookmarksMenu">
+    <div class="bookmark">
+        <a href="https://www.reddit.com/"><img src="https://i.imgur.com/ws2kAA0.png"></a>
+    </div>
+</div>
 <div id="settingsMenu" class="sidemenu">
     <div class="container">
+        <h1>Wallpaper</h1>
         <div class="menu-group">
             <label for="wallpaperAbyssApiKey">Api key:</label>
             <input type="text" id="wallpaperAbyssApiKey"/>
@@ -42,6 +48,11 @@
         </div>
 
         <div class="menu-group">
+            <label for="hexclock">Hexclock:</label>
+            <input type="checkbox" id="hexClockInput"/>
+        </div>
+
+        <div class="menu-group">
             <input type="button" id="historyClear" value="Clear Wallpaper History"/>
         </div>
     </div>
@@ -50,6 +61,7 @@
 <div id="background">
     <div class="overlay"></div>
     <div class="centered container-clock">
+        <h5 id="hexclock"/>
         <h1 id="clock"></h1>
         <h2 id="date"></h2>
     </div>
