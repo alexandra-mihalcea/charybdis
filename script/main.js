@@ -3,36 +3,38 @@ let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
 let settings = {
-    'wallpaperAbyssApiKey' : '',
-    'wallpaperUpdateEvery': 5,
-    'preloadedWallpaper': '',
-    'hexclock': false
+    wallpaperAbyssApiKey : '',
+    wallpaperUpdateEvery: 5,
+    preloadedWallpaper: '',
+    hexclock: false,
+    opacity: 0.7
 }
+
 let categories = {
-    'list':[],
-    'lastUpdatedAt':'',
-    'active': 1,
-    'pages': 100
+    list:[],
+    lastUpdatedAt:'',
+    active: 1,
+    pages: 100
 }
 
 let bookmarks = [
     {
-        'url':'https://www.reddit.com',
-        'image':'https://i.imgur.com/ws2kAA0.png',
-        'title':'reddit'
+        url:'https://www.reddit.com',
+        image:'https://i.imgur.com/ws2kAA0.png',
+        title:'reddit'
     },
 
     {
-        'url':'https://www.youtube.com/',
-        'image':'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
-        'title':'youtube'
+        url:'https://www.youtube.com/',
+        image:'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
+        title:'youtube'
     }
 ]
 
 let bookmark ={
-    'url': '',
-    'image': '',
-    'title': ''
+    url: '',
+    image: '',
+    title: ''
 }
 
 let wHistory = []
@@ -76,7 +78,8 @@ function updateSettings(){
         }
         const list = Object.keys(settings)
         list.map(function(key){
-            $('#' + key ).val(settings[key])
+            $('#' + key ).prop('checked', settings[key])
+            $('#' + key + ':not([type="checkbox"])').val(settings[key])
             $('#' + key ).change(function () {
                 const id = $(this).attr('id')
                 const value = $(this).val()
@@ -164,17 +167,17 @@ $(document).ready(function(){
     $('#historyClear').click(function(){
         clearHistory()
     })
-    $('#hexClockInput').change(function(){
-        const res = $('#hexClockInput:checked').val()
-        console.log(res)
+
+    $('#hexclock').change(function(){
+        const res = $('#hexclock').is(":checked")
         settings.hexclock = res
         setStorage('settings', settings)
         if(!res){
-            debugger
             $('.overlay').css('background-color','unset')
-            document.getElementById('hexclock').innerHTML =''
+            document.getElementById('hexclockhex').innerHTML =''
         }
     })
+
     $('#settings').click(function(){
         if(!menu){
             openMenu()
@@ -184,6 +187,12 @@ $(document).ready(function(){
 
         }
         menu = !menu
+    })
+
+    $('#opacity').on('input', function() {
+        settings.opacity = this.value
+        setStorage('settings', settings)
+        $('.overlay').css('opacity', this.value)
     })
 })
 
@@ -197,9 +206,10 @@ function startTime() {
     let m = today.getMinutes()
     let s = today.getSeconds()
     if(settings && settings.hexclock){
+        console.log('timeout', settings)
         let hextime = '#' + (h * 10000 + m * 100 + s)
         $('.overlay').css('background',  hextime)
-        document.getElementById('hexclock').innerHTML = hextime
+        document.getElementById('hexclockhex').innerHTML = hextime
     }
     h = formatTime(h)
     m = formatTime(m)

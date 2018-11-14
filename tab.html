@@ -36,7 +36,7 @@
             <input type="text" id="wallpaperAbyssApiKey"/>
         </div>
         <div class="menu-group">
-            <label for="wallpaperAbyssApiKey">Update every::</label>
+            <label for="wallpaperAbyssApiKey">Update every:</label>
             <input type="text" id="wallpaperUpdateEvery"/>
             <label> mins</label>
         </div>
@@ -49,11 +49,18 @@
 
         <div class="menu-group">
             <label for="hexclock">Hexclock:</label>
-            <input type="checkbox" id="hexClockInput"/>
+            <input type="checkbox" id="hexclock"/>
         </div>
 
         <div class="menu-group">
-            <input type="button" id="historyClear" value="Clear Wallpaper History"/>
+            <label for="opacity">Opacity:</label>
+            <div class="slide-container">
+                <input id="opacity" type="range" min="0" max="1" value="0.7" step="0.1">
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <input type="button" id="historyClear" value="Clear History"/>
         </div>
     </div>
 
@@ -61,7 +68,7 @@
 <div id="background">
     <div class="overlay"></div>
     <div class="centered container-clock">
-        <h5 id="hexclock"/>
+        <h5 id="hexclockhex"/>
         <h1 id="clock"></h1>
         <h2 id="date"></h2>
     </div>
