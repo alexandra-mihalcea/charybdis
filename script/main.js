@@ -79,8 +79,8 @@ function updateSettings(){
         const list = Object.keys(settings)
         list.map(function(key){
             $('#' + key ).prop('checked', settings[key])
-            $('#' + key + ':not([type="checkbox"])').val(settings[key])
-            $('#' + key ).change(function () {
+            $('#' + key).val(settings[key])
+            $('#' + key + ':not([type="checkbox"])').change(function () {
                 const id = $(this).attr('id')
                 const value = $(this).val()
                 settings[id] = value
@@ -173,7 +173,7 @@ $(document).ready(function(){
         settings.hexclock = res
         setStorage('settings', settings)
         if(!res){
-            $('.overlay').css('background-color','unset')
+            $('.overlay').css('background-color', 'black')
             document.getElementById('hexclockhex').innerHTML =''
         }
     })
@@ -206,7 +206,6 @@ function startTime() {
     let m = today.getMinutes()
     let s = today.getSeconds()
     if(settings && settings.hexclock){
-        console.log('timeout', settings)
         let hextime = '#' + (h * 10000 + m * 100 + s)
         $('.overlay').css('background',  hextime)
         document.getElementById('hexclockhex').innerHTML = hextime
@@ -245,12 +244,10 @@ function getWallpaper(refresh = false){
                     url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages) +'&info_level=3',
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
-                        console.log(result)
                         settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
                         setStorage('settings', settings)
                         const wallpaper = result.wallpapers[randomInt(0, 29)]
                         img_url = wallpaper.url_image
-                        console.log(wallpaper)
                         if(!preloaded) {
                             updateBackground(img_url)
                             setHistory(img_url)
@@ -296,7 +293,7 @@ function trackStorage(){
 }
 
 function setStorage(key, value){
-    if(dataStorage == 'online'){
+  if(dataStorage == 'online'){
         chrome.storage.sync.set({[key]: value}, function(){})
     }
     else{
