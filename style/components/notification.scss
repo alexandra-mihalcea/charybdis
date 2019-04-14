@@ -1,0 +1,68 @@
+$notification-position-y: 30px;
+$notification-position-y-offset: 20px;
+
+.notification{
+  position:fixed;
+  top: $notification-position-y;
+  background-color: transparentize($background-color-primary, 0.5);
+  padding: 10px 20px;
+  color: $font-color-primary;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -webkit-animation: slide-in 0.5s forwards;
+  animation: slide-in 0.5s ease-in-out;
+  &.slide-out{
+    opacity:0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-animation: slide-out 0.5s forwards;
+    animation: slide-out 0.5s ease-in-out;
+
+  }
+}
+
+@-webkit-keyframes slide-in {
+  100% {
+    top: $notification-position-y;
+    opacity: 1;
+  }
+  0% {
+    top: $notification-position-y + $notification-position-y-offset;
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  100% {
+    top: $notification-position-y;
+    opacity: 1;
+  }
+  0% {
+    top: $notification-position-y + $notification-position-y-offset;
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slide-out {
+  100% {
+    top: $notification-position-y - $notification-position-y-offset;
+    opacity: 0;
+  }
+  0% {
+    top: $notification-position-y;
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out {
+  100% {
+    top: $notification-position-y - $notification-position-y-offset;
+    opacity: 0;
+  }
+  0% {
+    top: $notification-position-y;
+    opacity: 1;
+  }
+}

@@ -1,3 +1,50 @@
+.notification {
+  position: fixed;
+  top: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  color: #eceeef;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -webkit-animation: slide-in 0.5s forwards;
+  animation: slide-in 0.5s ease-in-out; }
+  .notification.slide-out {
+    opacity: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-animation: slide-out 0.5s forwards;
+    animation: slide-out 0.5s ease-in-out; }
+
+@-webkit-keyframes slide-in {
+  100% {
+    top: 30px;
+    opacity: 1; }
+  0% {
+    top: 50px;
+    opacity: 1; } }
+@keyframes slide-in {
+  100% {
+    top: 30px;
+    opacity: 1; }
+  0% {
+    top: 50px;
+    opacity: 0; } }
+@-webkit-keyframes slide-out {
+  100% {
+    top: 10px;
+    opacity: 0; }
+  0% {
+    top: 30px;
+    opacity: 1; } }
+@keyframes slide-out {
+  100% {
+    top: 10px;
+    opacity: 0; }
+  0% {
+    top: 30px;
+    opacity: 1; } }
 html, body {
   background: #000;
   /* fallback for old browsers */
@@ -69,6 +116,8 @@ html, body {
     margin: 0 auto;
     text-align: center;
     padding: 6px 0; }
+  .sidemenu select, .sidemenu input[type="text"] {
+    width: 188px; }
 
 #bookmarksMenu {
   background: none;

@@ -7,6 +7,8 @@ $font-color-secondary: #C9CBCC;
 //settings-menu
 $settings-menu-width:400px;
 
+@import './components/notification';
+
 html, body{
   background: $background-color-primary;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, $background-color-secondary, $background-color-primary);  /* Chrome 10-25, Safari 5.1-6 */
@@ -19,6 +21,7 @@ html, body{
   font-smoothing: antialiased;
   font-weight: normal;
 }
+
 
 .overlay{
   background-color: $background-color-primary;
@@ -88,6 +91,9 @@ html, body{
     margin: 0 auto;
     text-align: center;
     padding: 6px 0;
+  }
+  select, input[type="text"]{
+    width:188px;
   }
 }
 

@@ -153,6 +153,7 @@ $(document).ready(function(){
         copyText.focus()
         copyText.select()
         document.execCommand("copy")
+        generateNotification('copied to clipboard')
     })
     $('#historyForward').click(function(){
         browseHistory(1)
@@ -163,16 +164,20 @@ $(document).ready(function(){
 
     $('#historyClear').click(function(){
         clearHistory()
+        generateNotification('wallpaper history cleared')
     })
-    $('#hexClockInput').change(function(){
-        const res = $('#hexClockInput:checked').val()
+    $('#hexclock').click(function(){
+        let res = $('#hexclock').is(':checked')
+        $('#hexclock').val(res)
         console.log(res)
         settings.hexclock = res
         setStorage('settings', settings)
-        if(!res){
-            debugger
+        if(!res){1
             $('.overlay').css('background-color','unset')
             document.getElementById('hexclock').innerHTML =''
+        }
+        else{
+            startTime()
         }
     })
     $('#settings').click(function(){
@@ -193,13 +198,14 @@ function formatDate(){
 
 function startTime() {
     let today = new Date()
+    let d = today.getDay()
     let h = today.getHours()
     let m = today.getMinutes()
     let s = today.getSeconds()
-    if(settings && settings.hexclock){
+    if(settings && settings.hexclock && settings.hexclock === 'true' && s%10 === 0){
         let hextime = '#' + (h * 10000 + m * 100 + s)
-        $('.overlay').css('background',  hextime)
-        document.getElementById('hexclock').innerHTML = hextime
+        $('.overlay').css('background-color',  hextime)
+        document.getElementById('hexclockDiv').innerHTML = hextime
     }
     h = formatTime(h)
     m = formatTime(m)
@@ -342,3 +348,18 @@ function browseHistory(amount = 1){
     }
 }
 
+// notification
+var animationTimer, clearTimer
+function generateNotification(innerText = ''){
+    clearNotifications()
+    let el = $('<div class="notification">'+ innerText +'</div>').appendTo('body')
+
+    animationTimer = setTimeout( function(){
+        $(el).addClass('slide-out')
+    }, 1500)
+}
+
+function clearNotifications(){
+     $($(".notification").splice(0,$(".notification").length - 1 - 1)).remove()
+     $(".notification").addClass('slide-out')
+}
