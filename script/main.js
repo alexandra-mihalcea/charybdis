@@ -3,36 +3,38 @@ let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
 let settings = {
-    'wallpaperAbyssApiKey' : '',
-    'wallpaperUpdateEvery': 5,
-    'preloadedWallpaper': '',
-    'hexclock': false
+    wallpaperAbyssApiKey : '',
+    wallpaperUpdateEvery: 5,
+    preloadedWallpaper: '',
+    hexclock: false,
+    opacity: 0.7
 }
+
 let categories = {
-    'list':[],
-    'lastUpdatedAt':'',
-    'active': 1,
-    'pages': 100
+    list:[],
+    lastUpdatedAt:'',
+    active: 1,
+    pages: 100
 }
 
 let bookmarks = [
     {
-        'url':'https://www.reddit.com',
-        'image':'https://i.imgur.com/ws2kAA0.png',
-        'title':'reddit'
+        url:'https://www.reddit.com',
+        image:'https://i.imgur.com/ws2kAA0.png',
+        title:'reddit'
     },
 
     {
-        'url':'https://www.youtube.com/',
-        'image':'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
-        'title':'youtube'
+        url:'https://www.youtube.com/',
+        image:'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
+        title:'youtube'
     }
 ]
 
 let bookmark ={
-    'url': '',
-    'image': '',
-    'title': ''
+    url: '',
+    image: '',
+    title: ''
 }
 
 let wHistory = []
@@ -76,8 +78,9 @@ function updateSettings(){
         }
         const list = Object.keys(settings)
         list.map(function(key){
-            $('#' + key ).val(settings[key])
-            $('#' + key ).change(function () {
+            $('#' + key ).prop('checked', settings[key])
+            $('#' + key).val(settings[key])
+            $('#' + key + ':not([type="checkbox"])').change(function () {
                 const id = $(this).attr('id')
                 const value = $(this).val()
                 settings[id] = value
@@ -172,7 +175,7 @@ $(document).ready(function(){
         console.log(res)
         settings.hexclock = res
         setStorage('settings', settings)
-        if(!res){1
+        if(!res){
             $('.overlay').css('background-color','unset')
             document.getElementById('hexclock').innerHTML =''
         }
@@ -180,6 +183,7 @@ $(document).ready(function(){
             startTime()
         }
     })
+
     $('#settings').click(function(){
         if(!menu){
             openMenu()
@@ -189,6 +193,12 @@ $(document).ready(function(){
 
         }
         menu = !menu
+    })
+
+    $('#opacity').on('input', function() {
+        settings.opacity = this.value
+        setStorage('settings', settings)
+        $('.overlay').css('opacity', this.value)
     })
 })
 
