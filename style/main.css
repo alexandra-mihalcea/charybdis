@@ -167,13 +167,18 @@ html, body {
   #background.menu-open {
     margin-left: -400px; }
 
-.small-button {
+.button {
   color: #C9CBCC;
-  font-size: 2.7em;
-  padding: 5px;
-  cursor: pointer; }
-  .small-button:hover, .small-button:focus {
-    color: #eceeef; }
+  transition: ease-in-out 0.3s; }
+  .button.small {
+    font-size: 2.7em;
+    padding: 5px;
+    cursor: pointer; }
+    .button.small:hover, .button.small:focus {
+      color: #eceeef; }
+  .button.disabled {
+    opacity: 0.5;
+    pointer-events: none; }
 
 .slide-container {
   width: 100%; }

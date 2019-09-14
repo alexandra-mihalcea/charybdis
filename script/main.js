@@ -99,6 +99,7 @@ function updateCategories(){
         } else {
             getCategories()
         }
+        $('.overlay').css('opacity', settings.opacity)
         getWallpaper()
     })
 }
@@ -126,7 +127,6 @@ function generateCategories(){
 
 function getCategories(){
     $.ajax({
-        //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
         url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category_list',
         complete: function (response) {
             const result = JSON.parse(response.responseText)
@@ -194,7 +194,6 @@ $(document).ready(function(){
         }
         menu = !menu
     })
-
     $('#opacity').on('input', function() {
         settings.opacity = this.value
         setStorage('settings', settings)
@@ -354,7 +353,17 @@ function browseHistory(amount = 1){
     if(newPos <= wHistory.length -1 && newPos >= 0 ) {
         updateBackground(wHistory[newPos])
         wHistoryPos = newPos
-
+        generateNotification((newPos + 1) + '/' + wHistory.length)
+        if(newPos <= 0)
+        {
+            $('#historyBack').addClass('disabled');
+        }
+        else if (newPos + 1>= wHistory.length){
+            $('#historyForward').addClass('disabled');
+        }
+        else{
+            $('#historyForward, #historyBack').removeClass('disabled');
+        }
     }
 }
 
