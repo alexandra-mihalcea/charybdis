@@ -216,9 +216,27 @@ $(document).ready(function(){
         }
     })
     $('#wallpaperInfo').on('click', function (){
-
+        getWallpaperInfo();
     })
 })
+
+function getWallpaperInfo(){
+    let w = wHistory[wHistoryPos]
+    let collection = 'unknown'
+    if(w.collection){
+        collection = `${w.collection} (${w.collection_id})`
+    }
+    generateNotification([
+    `id: ${w.id}`,
+    `category: ${w.category} (${w.category_id})`,
+    `collection: ${collection}`,
+    `size: ${w.file_size}`,
+    `type: ${w.file_type}`,
+    `user: ${w.user_name}`,
+    `width: ${w.width}`,
+    `height: ${w.height}`
+    ].join('</br>'), 9999, true)
+}
 
 function setOverlayColor(color = '#fff'){
 $('.overlay').css('background-color',color);
@@ -266,7 +284,7 @@ function getWallpaper(refresh = false){
         if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh || !wHistory.length) {
             if(preloaded) {
                 updateBackground(settings.preloadedWallpaper.url_image)
-                setHistory(settings.preloadedWallpaper.url_image)
+                setHistory(settings.preloadedWallpaper)
                 settings.preloadedWallpaper = ''
             }
             const timestamp = new moment().toISOString()
@@ -284,7 +302,7 @@ function getWallpaper(refresh = false){
                         console.log(wallpaper)
                         if(!preloaded) {
                             updateBackground(img_url)
-                            setHistory(img_url)
+                            setHistory(wallpaper)
                         }
                     },
                     error: function () {
@@ -293,7 +311,7 @@ function getWallpaper(refresh = false){
                 })
            }
         else{
-            updateBackground(wHistory[wHistory.length - 1])
+            updateBackground(wHistory[wHistory.length - 1].url_image)
         }
     })
 }
@@ -379,7 +397,7 @@ function clearHistory(){
 function browseHistory(amount = 1){
     let newPos = wHistoryPos + amount
     if(newPos <= wHistory.length -1 && newPos >= 0 ) {
-        updateBackground(wHistory[newPos])
+        updateBackground(wHistory[newPos].url_image)
         wHistoryPos = newPos
         generateNotification((newPos + 1) + '/' + wHistory.length)
         updateHistoryButtons()
@@ -406,13 +424,32 @@ function updateHistoryButtons(){
 
 // notification
 var animationTimer, clearTimer
-function generateNotification(innerText = ''){
+function generateNotification(innerText = '', timer = 1500, dismiss = false){
+    dismissOverlay = ''
+    if(dismiss){
+        dismissOverlay = '<div class="notification-overlay"></div>'
+    }
     clearNotifications()
-    let el = $('<div class="notification">'+ innerText +'</div>').appendTo('body')
+    let el = $(dismissOverlay + '<div class="notification"><p>'+ innerText +'</p></div>').appendTo('body')
 
     animationTimer = setTimeout( function(){
+        dismissNotification(el)
+    }, timer)
+
+
+    $('.notification-overlay, .container-clock').on('click', function(){
+        dismissNotification()
+    })
+}
+
+function dismissNotification(el = undefined) {
+    if(el){
         $(el).addClass('slide-out')
-    }, 1500)
+    }
+    else{
+        $('.notification').addClass('slide-out')
+    }
+    $('.notification-overlay').remove()
 }
 
 function clearNotifications(){

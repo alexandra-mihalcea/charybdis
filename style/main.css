@@ -171,14 +171,15 @@
 
 .notification {
   position: fixed;
-  top: 30px;
+  top: 70px;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px 20px;
   color: #eceeef;
   left: 50%;
   transform: translate(-50%, 0);
   -webkit-animation: slide-in 0.5s forwards;
-  animation: slide-in 0.5s ease-in-out; }
+  animation: slide-in 0.5s ease-in-out;
+  z-index: 1001; }
   .notification.slide-out {
     opacity: 0;
     -webkit-user-select: none;
@@ -187,34 +188,42 @@
     user-select: none;
     -webkit-animation: slide-out 0.5s forwards;
     animation: slide-out 0.5s ease-in-out; }
+  .notification p {
+    margin: 0; }
+
+.notification-overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000; }
 
 @-webkit-keyframes slide-in {
   100% {
-    top: 30px;
+    top: 70px;
     opacity: 1; }
   0% {
-    top: 50px;
+    top: 130px;
     opacity: 1; } }
 @keyframes slide-in {
   100% {
-    top: 30px;
+    top: 70px;
     opacity: 1; }
   0% {
-    top: 50px;
+    top: 130px;
     opacity: 0; } }
 @-webkit-keyframes slide-out {
   100% {
     top: 10px;
     opacity: 0; }
   0% {
-    top: 30px;
+    top: 70px;
     opacity: 1; } }
 @keyframes slide-out {
   100% {
     top: 10px;
     opacity: 0; }
   0% {
-    top: 30px;
+    top: 70px;
     opacity: 1; } }
 body::-webkit-scrollbar, html::-webkit-scrollbar, .sidemenu::-webkit-scrollbar {
   width: 5px; }
