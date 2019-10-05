@@ -224,18 +224,18 @@ function getWallpaperInfo(){
     let w = wHistory[wHistoryPos]
     let collection = 'unknown'
     if(w.collection){
-        collection = w.collection + ` (` + w.collection_id + `)`
+        collection = `${w.collection} (${w.collection_id})`
     }
-    generateNotification(` 
-    id: ` + w.id + ` </br>`+
-    `category: ` + w.category  + ` (` + w.category_id + `)` + ` </br>`+
-    `collection: ` + collection + ` </br>`+
-    `size: ` + w.file_size + ` </br>`+
-    `type: ` + w.file_type + ` </br>`+
-    `user: ` + w.user_name + ` (` + w.user_id + `)` +` </br>`+
-    `width: ` + w.width + ` </br>`+
-    `height: ` + w.height + ` </br>
-    `, 99999999, true)
+    generateNotification([
+    `id: ${w.id}`,
+    `category: ${w.category} (${w.category_id})`,
+    `collection: ${collection}`,
+    `size: ${w.file_size}`,
+    `type: ${w.file_type}`,
+    `user: ${w.user_name}`,
+    `width: ${w.width}`,
+    `height: ${w.height}`
+    ].join('</br>'), 9999, true)
 }
 
 function setOverlayColor(color = '#fff'){
