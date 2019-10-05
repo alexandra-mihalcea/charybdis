@@ -1,13 +1,14 @@
-$background-color-primary: #000;//#232526;
+//variables
+$background-color-primary: #000;
 $background-color-secondary: #242424;
 
 $font-color-primary: #eceeef;
 $font-color-secondary: #C9CBCC;
 
-//settings-menu
-$settings-menu-width:400px;
-
+//imports
+@import './components/menu';
 @import './components/notification';
+@import './components/scrollbar';
 
 html, body{
   background: $background-color-primary;  /* fallback for old browsers */
@@ -16,12 +17,15 @@ html, body{
   color: $font-color-primary;
   font-family: 'Quicksand', sans-serif;
   overflow: hidden;
-  -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
   font-weight: normal;
+  margin: 0;
 }
 
+a{
+  color: $font-color-primary;
+  font-family: 'Quicksand', sans-serif;
+}
 
 .overlay{
   background-color: $background-color-primary;
@@ -49,7 +53,7 @@ html, body{
 
 .container-bar{
   text-align: right;
-  padding: 10px;
+  padding: 5px;
   position: absolute;
   right: 0;
   z-index: 999;
@@ -73,46 +77,6 @@ html, body{
   text-align: center;
 }
 
-.sidemenu {
-  height: 100%;
-  width: $settings-menu-width;
-  margin-right: -$settings-menu-width;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-  &.open{
-    margin-right: 0;
-  }
-  .menu-group{
-    margin: 0 auto;
-    text-align: center;
-    padding: 6px 0;
-  }
-  select, input[type="text"]{
-    width:188px;
-  }
-}
-
-#bookmarksMenu {
-  background:none;
-  position: absolute;
-  margin-left:10px;
-  .bookmark {
-
-    a {
-      img {
-        width: 50px;
-        height: auto;
-        filter: brightness(0) invert(1);
-      }
-    }
-  }
-}
 .hidden{
   width: 0;
   height: 0;
@@ -123,14 +87,15 @@ html, body{
 }
 
 .container{
-  padding: 20px;
+  padding: 10px 20px;
 }
 
-#hexclock{
-  font-size: 1.9em;
-  margin: 0 0 -1em 0;
-  opacity: 0.2;
-}
+#hexclockDiv{
+   font-size: 1.9em;
+   opacity: 0.2;
+  bottom: 10px;
+  position: relative;
+ }
 
 #clock{
   font-size: 11em;
@@ -158,15 +123,16 @@ html, body{
   }
 }
 .button {
-  color: $font-color-secondary;
+  color: $font-color-primary;
   transition: ease-in-out 0.3s;
+  opacity:0.7;
   &.small {
     font-size: 2.7em;
     padding: 5px;
     cursor: pointer;
 
     &:hover, &:focus {
-      color: $font-color-primary;
+      opacity:1;
     }
   }
   &.disabled {
@@ -208,4 +174,20 @@ html, body{
   height: 25px;
   background: #4CAF50;
   cursor: pointer;
+}
+
+//remove blue border against inputs
+input,
+select,
+textarea,
+button {
+  outline: none;
+  &:focus{
+    outline: none;
+  }
+}
+
+
+.align-left{
+  text-align: left
 }

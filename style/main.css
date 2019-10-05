@@ -1,3 +1,174 @@
+/* Customize the label (the container) */
+.checkbox {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  .checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0; }
+  .checkbox input:checked ~ .checkmark::after {
+    display: block; }
+  .checkbox .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #b3b3b3; }
+    .checkbox .checkmark::after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 8px;
+      top: 3px;
+      width: 6px;
+      height: 12px;
+      border: solid #111;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg); }
+
+.sidemenu {
+  height: 100%;
+  width: 400px;
+  margin-right: -400px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: 0.5s;
+  padding-top: 30px; }
+  .sidemenu::after {
+    content: ' ';
+    text-align: right;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 54px;
+    background-color: #111;
+    width: 400px;
+    transition: 0.5s;
+    animation-delay: 2s;
+    margin-right: -400px; }
+  .sidemenu.open {
+    margin-right: 0; }
+    .sidemenu.open::after {
+      margin-right: 0; }
+  .sidemenu .menu-placeholder {
+    margin-bottom: 50px; }
+  .sidemenu input, .sidemenu .checkbox, .sidemenu select, .sidemenu input[type="text"] {
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s; }
+    .sidemenu input:hover, .sidemenu .checkbox:hover, .sidemenu select:hover, .sidemenu input[type="text"]:hover {
+      opacity: 1; }
+  .sidemenu .menu-label {
+    font-size: 1.2em; }
+  .sidemenu .div-label {
+    margin: 3px;
+    float: left;
+    display: inline-block;
+    width: 27%; }
+  .sidemenu .div-trigger {
+    margin: 3px;
+    display: inline-block;
+    width: 67%; }
+  .sidemenu .div-full {
+    float: left;
+    width: 100%; }
+  .sidemenu h1 {
+    text-align: left; }
+  .sidemenu .menu-group {
+    margin: 0 auto;
+    text-align: center;
+    padding: 6px 0; }
+  .sidemenu select, .sidemenu input[type="text"] {
+    width: 100%;
+    border: none;
+    padding: 6px;
+    background-color: #b3b3b3;
+    height: 28px; }
+  .sidemenu input[type="text"] {
+    width: 95%;
+    height: 15px; }
+  .sidemenu input[type="color"] {
+    width: 102%;
+    border: none;
+    margin: -8px 0;
+    padding: 0;
+    background-color: #111;
+    height: 35px; }
+  .sidemenu input[type="button"] {
+    background: #808080;
+    border: none;
+    color: #252525;
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 15px;
+    opacity: 0.7;
+    outline: 0; }
+    .sidemenu input[type="button"]:hover {
+      opacity: 1;
+      cursor: pointer; }
+  .sidemenu .slidecontainer {
+    width: 100%; }
+  .sidemenu input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #b3b3b3;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s; }
+    .sidemenu input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 25px;
+      height: 25px;
+      background: #919191;
+      cursor: pointer; }
+  .sidemenu .disclaimer {
+    text-align: center;
+    padding: 6px;
+    margin-bottom: 6px; }
+  .sidemenu a {
+    font-weight: bolder;
+    opacity: 0.7; }
+    .sidemenu a:hover {
+      opacity: 1; }
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes slide-right {
+  from {
+    left: 0px; }
+  to {
+    left: 200px; } }
+@keyframes slide-right {
+  from {
+    left: 0px; }
+  to {
+    left: 200px; } }
+#bookmarksMenu {
+  background: none;
+  position: absolute;
+  margin-left: 10px; }
+  #bookmarksMenu .bookmark a img {
+    width: 50px;
+    height: auto;
+    filter: brightness(0) invert(1); }
+
 .notification {
   position: fixed;
   top: 30px;
@@ -45,6 +216,13 @@
   0% {
     top: 30px;
     opacity: 1; } }
+body::-webkit-scrollbar, html::-webkit-scrollbar, .sidemenu::-webkit-scrollbar {
+  width: 5px; }
+body::-webkit-scrollbar-track, html::-webkit-scrollbar-track, .sidemenu::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); }
+body::-webkit-scrollbar-thumb, html::-webkit-scrollbar-thumb, .sidemenu::-webkit-scrollbar-thumb {
+  background-color: darkgrey; }
+
 html, body {
   background: #000;
   /* fallback for old browsers */
@@ -55,10 +233,13 @@ html, body {
   color: #eceeef;
   font-family: 'Quicksand', sans-serif;
   overflow: hidden;
-  -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  font-weight: normal; }
+  font-weight: normal;
+  margin: 0; }
+
+a {
+  color: #eceeef;
+  font-family: 'Quicksand', sans-serif; }
 
 .overlay {
   background-color: #000;
@@ -81,7 +262,7 @@ html, body {
 
 .container-bar {
   text-align: right;
-  padding: 10px;
+  padding: 5px;
   position: absolute;
   right: 0;
   z-index: 999;
@@ -98,36 +279,6 @@ html, body {
   transform: translate(-50%, -50%);
   text-align: center; }
 
-.sidemenu {
-  height: 100%;
-  width: 400px;
-  margin-right: -400px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px; }
-  .sidemenu.open {
-    margin-right: 0; }
-  .sidemenu .menu-group {
-    margin: 0 auto;
-    text-align: center;
-    padding: 6px 0; }
-  .sidemenu select, .sidemenu input[type="text"] {
-    width: 188px; }
-
-#bookmarksMenu {
-  background: none;
-  position: absolute;
-  margin-left: 10px; }
-  #bookmarksMenu .bookmark a img {
-    width: 50px;
-    height: auto;
-    filter: brightness(0) invert(1); }
-
 .hidden {
   width: 0;
   height: 0;
@@ -137,12 +288,13 @@ html, body {
   top: -900px; }
 
 .container {
-  padding: 20px; }
+  padding: 10px 20px; }
 
-#hexclock {
+#hexclockDiv {
   font-size: 1.9em;
-  margin: 0 0 -1em 0;
-  opacity: 0.2; }
+  opacity: 0.2;
+  bottom: 10px;
+  position: relative; }
 
 #clock {
   font-size: 11em;
@@ -168,14 +320,15 @@ html, body {
     margin-left: -400px; }
 
 .button {
-  color: #C9CBCC;
-  transition: ease-in-out 0.3s; }
+  color: #eceeef;
+  transition: ease-in-out 0.3s;
+  opacity: 0.7; }
   .button.small {
     font-size: 2.7em;
     padding: 5px;
     cursor: pointer; }
     .button.small:hover, .button.small:focus {
-      color: #eceeef; }
+      opacity: 1; }
   .button.disabled {
     opacity: 0.5;
     pointer-events: none; }
@@ -209,5 +362,21 @@ html, body {
   height: 25px;
   background: #4CAF50;
   cursor: pointer; }
+
+input,
+select,
+.sidemenu input[type="text"],
+textarea,
+button {
+  outline: none; }
+  input:focus,
+  select:focus,
+  .sidemenu input[type="text"]:focus,
+  textarea:focus,
+  button:focus {
+    outline: none; }
+
+.align-left {
+  text-align: left; }
 
 /*# sourceMappingURL=main.css.map */
