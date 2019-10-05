@@ -1,0 +1,184 @@
+//variables
+$settings-menu-width:400px;
+$menu-bg-color: #111;
+$menu-btn-color: #808080;
+$menu-input-color: lighten($menu-btn-color, 20%);
+$menu-top-padding: 30px;
+$menu-setting-font: 1.2em;
+$menu-input-height: 25px;
+$menu-slide-duration: 0.5s;
+
+//imports
+@import './checkbox';
+
+.sidemenu {
+  height: 100%;
+  width: $settings-menu-width;
+  margin-right: -$settings-menu-width;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color:$menu-bg-color;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition:$menu-slide-duration;
+  padding-top: $menu-top-padding;
+
+  &::after{
+    content: ' ';
+    text-align: right;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: $menu-top-padding*1.8;
+    background-color: $menu-bg-color;
+    width: $settings-menu-width;
+    //animate
+    transition:$menu-slide-duration;
+    animation-delay: 2s;
+    margin-right: -$settings-menu-width;
+  }
+  &.open{
+    margin-right: 0;
+    &::after{
+      margin-right: 0;
+    }
+  }
+  .menu-placeholder{
+    margin-bottom: 50px;
+  }
+  input, .checkbox, select{
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .menu-label{
+    font-size: $menu-setting-font;
+  }
+  .div-label{
+    margin: 3px;
+    float:left;
+    display:inline-block;
+    width:27%;
+  }
+  .div-trigger{
+    margin: 3px;
+    display:inline-block;
+    width:67%;
+  }
+
+  .div-full{
+    float:left;
+    width:100%;
+  }
+
+
+  h1{
+    text-align: left;
+  }
+  .menu-group{
+    margin: 0 auto;
+    text-align: center;
+    padding: 6px 0;
+  }
+  select{
+    width:100%;
+    border: none;
+    padding: 6px;
+    background-color: $menu-input-color;
+    height:$menu-input-height + 3px;
+  }
+  input[type="text"]{
+    width: 95%;
+    height:$menu-input-height - 10px;
+    @extend select;
+  }
+
+  input[type="color"]{
+    width: 102%;
+    border: none;
+    margin: -8px 0;
+    padding: 0;
+    background-color: $menu-bg-color;
+    height: $menu-input-height + 10px;
+  }
+  input[type="button"]{
+    background: $menu-btn-color;
+    border: none;
+    color: lighten($menu-bg-color, 8%);
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 15px;
+    opacity:0.7;
+    outline:0;
+    &:hover{
+      opacity:1;
+      cursor: pointer;
+    }
+  }
+
+  .slidecontainer {
+    width: 100%;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: $menu-input-height;
+    background: $menu-input-color;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 25px;
+      height: 25px;
+      background: lighten($menu-bg-color, 50);
+      cursor: pointer;
+    }
+  }
+  .disclaimer{
+    text-align: center;
+    padding: 6px;
+    margin-bottom:6px;
+  }
+  a{
+    font-weight: bolder;
+    opacity: 0.7;
+    &:hover{
+      opacity: 1;
+    }
+  }
+}
+
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes slide-right {
+  from {left: 0px;}
+  to {left: 200px;}
+}
+
+@keyframes slide-right {
+  from {left: 0px;}
+  to {left: 200px;}
+}
+
+#bookmarksMenu {
+  background:none;
+  position: absolute;
+  margin-left:10px;
+  .bookmark {
+
+    a {
+      img {
+        width: 50px;
+        height: auto;
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+}

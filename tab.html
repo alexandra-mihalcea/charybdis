@@ -15,57 +15,100 @@
 </head>
 <body>
 <div class="container-bar">
-    <a alt="View previous wallpaper"  id="historyBack" class="small-button"><i class="fas fa-arrow-alt-circle-left"></i></a>
-    <a alt="View next wallpaper" id="historyForward" class="small-button"><i class="fas fa-arrow-alt-circle-right"></i></a>
-    <a alt="Refresh wallpaper" id="refresh" class="small-button"><i class="fas fa-sync-alt"></i></a>
-    <a alt="Download wallpaper" id="download" class="small-button" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
-    <a alt="Copy to clipboard" id="copy" class="small-button" clipboard-text=""><i class="fa fa-copy"></i></a>
+    <a alt="View previous wallpaper"  id="historyBack" class="button small"><i class="fas fa-arrow-alt-circle-left"></i></a>
+    <a alt="View next wallpaper" id="historyForward" class="button small disabled"><i class="fas fa-arrow-alt-circle-right"></i></a>
+    <a alt="View wallpaper info" id="wallpaperInfo" class="button small"><i class="fas fa-info-circle"></i></a>
+    <a alt="Refresh wallpaper" id="refresh" class="button small"><i class="fas fa-sync-alt"></i></a>
+    <a alt="Download wallpaper" id="download" class="button small" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
+    <a alt="Copy to clipboard" id="copy" class="button small" clipboard-text=""><i class="fa fa-copy"></i></a>
     <textarea id="clipboardText" class="hidden"></textarea>
-    <a alt="Open or close the settings menu" id="settings" class="small-button"><i class="fa fa-cog"></i></a>
+    <a alt="Open or close the settings menu" id="settings" class="button small"><i class="fa fa-cog"></i></a>
 </div>
 <div id="bookmarksMenu">
 </div>
 <div id="settingsMenu" class="sidemenu">
+    <div class="container-backgGround"></div>
     <div class="container">
         <h1>Wallpaper</h1>
         <div class="menu-group">
-            <label for="wallpaperAbyssApiKey">Api key:</label>
-            <input type="text" id="wallpaperAbyssApiKey"/>
+            <div class="div-label">
+                <label for="wallpaperAbyssApiKey" class="menu-label">Api key:</label>
+            </div>
+            <div class="div-trigger">
+                <input type="text" id="wallpaperAbyssApiKey"/>
+            </div>
+        </div>
+        <div class="div-full disclaimer">
+            <a href="https://wall.alphacoders.com">Powered By Wallpaper Abyss</a>
         </div>
         <div class="menu-group">
-            <label for="wallpaperAbyssApiKey">Update every:</label>
-            <input type="text" id="wallpaperUpdateEvery"/>
-            <label> mins</label>
+        <div class="div-label">
+            <label for="wallpaperCategories" class="menu-label">Category:</label>
         </div>
-
-        <div class="menu-group">
-            <label for="wallpaperCategories">Category:</label>
+        <div class="div-trigger">
             <select id="wallpaperCategories">
             </select>
         </div>
-
-        <div class="menu-group">
-            <label for="hexclock">Hexclock:</label>
-            <input type="checkbox" id="hexclock"/>
         </div>
-
         <div class="menu-group">
-            <label for="opacity">Opacity:</label>
-            <div class="slide-container">
-                <input id="opacity" type="range" min="0" max="1" value="0.7" step="0.1">
+        <div class="div-label">
+            <label for="wallpaperAbyssApiKey" class="menu-label">Update every [x] mins:</label>
+        </div>
+        <div class="div-trigger">
+            <input type="text" id="wallpaperUpdateEvery"/>
             </div>
         </div>
+
+
 
         <div class="menu-group">
             <input type="button" id="historyClear" value="Clear History"/>
         </div>
-    </div>
+        </div>
+    <div class="container">
+        <h1>Overlay</h1>
+        <div class="menu-group">
+            <div class="div-label">
+            <label for="overlayColor" class="menu-label">Color:</label>
+            </div>
+            <div class="div-trigger">
+            <div class="slide-container">
+                <input type="color" id="overlayColor">
+            </div>
+            </div>
+        </div>
+        <div class="menu-group">
+            <div class="div-label">
+            <label for="opacity" class="menu-label">Opacity:</label>
+            </div>
+            <div class="div-trigger">
+            <div class="slide-container">
+                <input id="opacity" type="range" min="0" max="1" value="0.7" step="0.1">
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="container">
+    <h1>Clock</h1>
+        <div class="menu-group">
+            <div class="div-label">
+            <label for="hexclock" class="menu-label">Hexclock:</label>
+        </div>
+            <div class="div-trigger align-left">
+                <label class="checkbox">
+                    <input type="checkbox" id="hexclock"/>
+                    <span class="checkmark"></span>
+                </label>
+                <label id="hexclockDiv"></h5>
+            </div>
+        </div>
+            <div class="menu-placeholder"></div>
+</div>
 
 </div>
 <div id="background">
     <div class="overlay"></div>
     <div class="centered container-clock">
-        <h5 id="hexclockDiv"/>
         <h1 id="clock"></h1>
         <h2 id="date"></h2>
     </div>

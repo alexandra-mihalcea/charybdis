@@ -1,0 +1,66 @@
+//variables
+$menu-bg-color: #111;
+$menu-btn-color: #808080;
+$menu-input-color: lighten($menu-btn-color, 20%);
+$menu-input-height: 25px;
+
+/* Customize the label (the container) */
+.checkbox {
+  display:inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  //hide default checkbox
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  //when checked, show checkbox
+  input:checked ~ .checkmark::after {
+    display: block;
+  }
+  //custom checkbox
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: $menu-input-height;
+    width: 25px;
+    background-color: $menu-input-color;
+    &::after {
+      content: "";
+      position: absolute;
+      display: none;
+        left: 8px;
+        top: 3px;
+        width: 6px;
+        height: 12px;
+      border: solid $menu-bg-color;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+  }
+}
+//
+///* Style the checkmark/indicator */
+//.checkbox .checkmark::after {
+//  left: 9px;
+//  top: 5px;
+//  width: 5px;
+//  height: 10px;
+//  border: solid $menu-bg-color;
+//  border-width: 0 3px 3px 0;
+//  -webkit-transform: rotate(45deg);
+//  -ms-transform: rotate(45deg);
+//  transform: rotate(45deg);
+//}

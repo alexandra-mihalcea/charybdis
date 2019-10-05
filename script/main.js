@@ -7,6 +7,7 @@ let settings = {
     wallpaperUpdateEvery: 5,
     preloadedWallpaper: '',
     hexclock: false,
+    overlayColor: '#000',
     opacity: 0.7
 }
 
@@ -18,17 +19,17 @@ let categories = {
 }
 
 let bookmarks = [
-    {
-        url:'https://www.reddit.com',
-        image:'https://i.imgur.com/ws2kAA0.png',
-        title:'reddit'
-    },
-
-    {
-        url:'https://www.youtube.com/',
-        image:'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
-        title:'youtube'
-    }
+    // {
+    //     url:'https://www.reddit.com',
+    //     image:'https://i.imgur.com/ws2kAA0.png',
+    //     title:'reddit'
+    // },
+    //
+    // {
+    //     url:'https://www.youtube.com/',
+    //     image:'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
+    //     title:'youtube'
+    // }
 ]
 
 let bookmark ={
@@ -45,14 +46,14 @@ let dataStorage = 'online'
 
 const bookmarkTemplate = `
     <div class="bookmark">
-        <a href="[[URL]]"><img src="[[URL]]"></a>
+        <a href="[[URL]]"><img src="[[IMG]]"></a>
     </div>
 `
 
 function generateBookmarks(){
     if(bookmarks && bookmarks.length){
         for(let x =0; x< bookmarks.length; x++){
-            let html = bookmarkTemplate.replace('[[URL]]', bookmarks[x].url);
+            let html = bookmarkTemplate.replace('[[URL]]', bookmarks[x].url)
             html = html.replace('[[URL]]', bookmarks[x].image)
             $('#bookmarksMenu').append(html)
         }
@@ -87,6 +88,12 @@ function updateSettings(){
                 setStorage('settings', settings)
             })
         })
+        if(settings.hexclock) {
+            startTime(true)
+        }
+        else {
+            setOverlayColor(settings.overlayColor)
+        }
     })
 
 }
@@ -99,6 +106,7 @@ function updateCategories(){
         } else {
             getCategories()
         }
+        $('.overlay').css('opacity', settings.opacity)
         getWallpaper()
     })
 }
@@ -126,7 +134,6 @@ function generateCategories(){
 
 function getCategories(){
     $.ajax({
-        //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
         url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category_list',
         complete: function (response) {
             const result = JSON.parse(response.responseText)
@@ -146,11 +153,11 @@ $(document).ready(function(){
     getHistory()
     startTime()
     formatDate()
-    generateBookmarks();
-    $('#refresh').click(function(){
+    generateBookmarks()
+    $('#refresh').on('click', function(){
         getWallpaper(true)
     })
-    $('#copy').click(function(){
+    $('#copy').on('click', function(){
         let copyText = document.getElementById('clipboardText')
         //copyText.value = wHistory[wHistory.length -1]
         copyText.focus()
@@ -158,62 +165,80 @@ $(document).ready(function(){
         document.execCommand("copy")
         generateNotification('copied to clipboard')
     })
-    $('#historyForward').click(function(){
+    $('#historyForward').on('click', function(){
         browseHistory(1)
     })
-    $('#historyBack').click(function(){
+    $('#historyBack').on('click', function(){
         browseHistory(-1)
     })
 
-    $('#historyClear').click(function(){
+    $('#historyClear').on('click', function(){
         clearHistory()
         generateNotification('wallpaper history cleared')
     })
-    $('#hexclock').click(function(){
+    $('#hexclock').on('click', function(){
         let res = $('#hexclock').is(':checked')
-        $('#hexclock').val(res)
+        //$('#hexclock').val(res)
         console.log(res)
         settings.hexclock = res
         setStorage('settings', settings)
         if(!res){
-            $('.overlay').css('background-color','unset')
-            document.getElementById('hexclock').innerHTML =''
+            $('.overlay').css('background-color', settings.overlayColor)
+            document.getElementById('hexclockDiv').innerHTML =''
         }
         else{
-            startTime()
+            startTime(true)
         }
     })
 
-    $('#settings').click(function(){
+    $('#settings').on('click', function(){
         if(!menu){
             openMenu()
         }
         else{
             closeMenu()
-
         }
         menu = !menu
     })
-
     $('#opacity').on('input', function() {
         settings.opacity = this.value
-        setStorage('settings', settings)
+        $('#hexclock')
         $('.overlay').css('opacity', this.value)
     })
+    $('#overlayColor').on('change', function (){
+        if(this.value) {
+            setOverlayColor(this.value)
+            settings.overlayColor = this.value
+            settings.hexclock = false
+            $('#hexclock').prop('checked', false)
+            document.getElementById('hexclockDiv').innerHTML =''
+            setStorage('settings', settings)
+        }
+    })
+    $('#wallpaperInfo').on('click', function (){
+
+    })
 })
+
+function setOverlayColor(color = '#fff'){
+$('.overlay').css('background-color',color);
+}
 
 function formatDate(){
     $('#date').html(moment().format("ddd, DD MMM"))
 }
 
-function startTime() {
+function addZeroToTime(input){
+    return ('0'+ input).substr(-2)
+}
+function startTime(bypass = false) {
     let today = new Date()
     let d = today.getDay()
     let h = today.getHours()
     let m = today.getMinutes()
     let s = today.getSeconds()
-    if(settings && settings.hexclock && settings.hexclock === 'true' && s%10 === 0){
-        let hextime = '#' + (h * 10000 + m * 100 + s)
+    if((settings && settings.hexclock && settings.hexclock === true && s%10 === 0)||(bypass)){
+        let hextime = '#' + (addZeroToTime(h)+ addZeroToTime(m) + addZeroToTime(s))
         $('.overlay').css('background-color',  hextime)
         document.getElementById('hexclockDiv').innerHTML = hextime
     }
@@ -341,12 +366,14 @@ function setHistory(item){
         wHistory.push(item)
         wHistoryPos = wHistory.length - 1
     }
+    updateHistoryButtons()
     setStorage('wallpaperHistory', wHistory)
 }
 
 function clearHistory(){
     wHistory = []
     setStorage('wallpaperHistory', [])
+    updateHistoryButtons()
 }
 
 function browseHistory(amount = 1){
@@ -354,7 +381,26 @@ function browseHistory(amount = 1){
     if(newPos <= wHistory.length -1 && newPos >= 0 ) {
         updateBackground(wHistory[newPos])
         wHistoryPos = newPos
+        generateNotification((newPos + 1) + '/' + wHistory.length)
+        updateHistoryButtons()
+    }
+}
 
+function updateHistoryButtons(){
+    if (0 >= wHistory.length -1 ){
+        $('#historyForward, #historyBack').addClass('disabled')
+    }
+    else if(wHistoryPos <= 0)
+    {
+        $('#historyBack').addClass('disabled')
+        $('#historyForward').removeClass('disabled')
+    }
+    else if (wHistoryPos >= wHistory.length-1){
+        $('#historyForward').addClass('disabled')
+        $('#historyBack').removeClass('disabled')
+    }
+    else{
+        $('#historyForward, #historyBack').removeClass('disabled')
     }
 }
 
