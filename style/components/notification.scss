@@ -1,5 +1,8 @@
-$notification-position-y: 30px;
-$notification-position-y-offset: 20px;
+//variables
+$font-color-primary: #eceeef;
+$background-color-primary: #000;
+$notification-position-y: 70px;
+$notification-position-y-offset: 60px;
 
 .notification{
   position:fixed;
@@ -11,6 +14,7 @@ $notification-position-y-offset: 20px;
   transform: translate(-50%, 0);
   -webkit-animation: slide-in 0.5s forwards;
   animation: slide-in 0.5s ease-in-out;
+  z-index: 1001;
   &.slide-out{
     opacity:0;
     -webkit-user-select: none;
@@ -19,8 +23,17 @@ $notification-position-y-offset: 20px;
     user-select: none;
     -webkit-animation: slide-out 0.5s forwards;
     animation: slide-out 0.5s ease-in-out;
-
   }
+  p{
+    margin:0;
+  }
+}
+
+.notification-overlay{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
 }
 
 @-webkit-keyframes slide-in {
