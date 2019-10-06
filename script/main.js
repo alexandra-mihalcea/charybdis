@@ -154,6 +154,7 @@ $(document).ready(function(){
     startTime()
     formatDate()
     generateBookmarks()
+    document.onkeydown = SetUpKeyBindings
     $('#refresh').on('click', function(){
         getWallpaper(true)
     })
@@ -219,6 +220,32 @@ $(document).ready(function(){
         getWallpaperInfo();
     })
 })
+
+function SetUpKeyBindings(e){
+    let obj = {
+        37: () => {
+            browseHistory(-1)
+        }, //left
+        38: () => {
+            getWallpaperInfo();
+        }, //up
+        39: () => {
+            if(wHistoryPos +1 >= wHistory.length){
+                getWallpaper(true)
+            }
+            else {
+                browseHistory(1)
+            }
+        }, //right
+        40: () => {
+            if($('#download').attr('href') && $('#download').attr('href') !== '')
+            window.open($('#download').attr('href'),'_blank')
+        }
+    }
+    let x = obj[e.keyCode]
+    if(x)
+        x()
+}
 
 function getWallpaperInfo(){
     let w = wHistory[wHistoryPos]
