@@ -9,6 +9,7 @@ $font-color-secondary: #C9CBCC;
 @import './components/menu';
 @import './components/notification';
 @import './components/scrollbar';
+@import './components/rokuyo';
 
 html, body{
   background: $background-color-primary;  /* fallback for old browsers */
