@@ -7,6 +7,7 @@ let settings = {
     wallpaperUpdateEvery: 5,
     preloadedWallpaper: '',
     hexclock: false,
+    rokuyo:false,
     overlayColor: '#000',
     opacity: 0.7
 }
@@ -93,6 +94,9 @@ function updateSettings(){
         }
         else {
             setOverlayColor(settings.overlayColor)
+        }
+        if(settings.rokuyo){
+          getRokuyo(true);
         }
     })
 
@@ -203,7 +207,6 @@ $(document).ready(function(){
     })
     $('#opacity').on('input', function() {
         settings.opacity = this.value
-        $('#hexclock')
         $('.overlay').css('opacity', this.value)
     })
     $('#overlayColor').on('change', function (){
@@ -219,7 +222,24 @@ $(document).ready(function(){
     $('#wallpaperInfo').on('click', function (){
         getWallpaperInfo();
     })
+    $('#rokuyo').on('click', function (){
+      let res = $(this).is(':checked')
+        getRokuyo(res)
+    })
 })
+
+function getRokuyo(value){
+    if(value) {
+        let r = today();
+        document.getElementById('rokuyoDiv').innerHTML = `${r.name} (${r.kanji})<span class="info">${r.description}</span>`
+        $('#rokuyoDiv').attr('content', r.description)
+        settings['rokuyo'] = value
+        setStorage('settings', settings)
+    }
+    else{
+            document.getElementById('rokuyoDiv').innerHTML =''
+        }
+}
 
 function SetUpKeyBindings(e){
     let obj = {

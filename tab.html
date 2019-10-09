@@ -1,16 +1,19 @@
 <!doctype html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>New Tab</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css"
           integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css"
           integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Quicksand" rel="stylesheet">
     <link rel="stylesheet" href="style/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script src="script/moment-lunar.js"></script>
+    <script src="script/rokuyo.js"></script>
     <script src="script/main.js"></script>
 </head>
 <body>
@@ -19,7 +22,7 @@
     <a alt="View next wallpaper" id="historyForward" class="button small disabled"><i class="fas fa-arrow-alt-circle-right"></i></a>
     <a alt="View wallpaper info" id="wallpaperInfo" class="button small"><i class="fas fa-info-circle"></i></a>
     <a alt="Refresh wallpaper" id="refresh" class="button small"><i class="fas fa-sync-alt"></i></a>
-    <a alt="Download wallpaper" id="download" class="button small" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
+    <a alt="Download wallpaper" id="q" class="button small" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
     <a alt="Copy to clipboard" id="copy" class="button small" clipboard-text=""><i class="fa fa-copy"></i></a>
     <textarea id="clipboardText" class="hidden"></textarea>
     <a alt="Open or close the settings menu" id="settings" class="button small"><i class="fa fa-cog"></i></a>
@@ -88,19 +91,30 @@
             </div>
         </div>
         </div>
-        <div class="container">
+    <div class="container">
     <h1>Clock</h1>
         <div class="menu-group">
             <div class="div-label">
-            <label for="hexclock" class="menu-label">Hexclock:</label>
-        </div>
-            <div class="div-trigger align-left">
-                <label class="checkbox">
-                    <input type="checkbox" id="hexclock"/>
-                    <span class="checkmark"></span>
-                </label>
-                <label id="hexclockDiv"></h5>
+                <label for="hexclock" class="menu-label">Hexclock:</label>
             </div>
+                <div class="div-trigger align-left">
+                    <label class="checkbox">
+                        <input type="checkbox" id="hexclock"/>
+                        <span class="checkmark"></span>
+                    </label>
+                    <label id="hexclockDiv"></label>
+                </div>
+        </div>
+        <div class="menu-group">
+                <div class="div-label">
+                    <label for="rokuyo" class="menu-label">Rokuyo:</label>
+                </div>
+         <div class="div-trigger align-left">
+            <label class="checkbox">
+                <input type="checkbox" id="rokuyo"/>
+                <span class="checkmark"></span>
+            </label>
+         </div>
         </div>
             <div class="menu-placeholder"></div>
 </div>
@@ -111,6 +125,7 @@
     <div class="centered container-clock">
         <h1 id="clock"></h1>
         <h2 id="date"></h2>
+        <h3 id="rokuyoDiv"></h3>
     </div>
 </div>
 

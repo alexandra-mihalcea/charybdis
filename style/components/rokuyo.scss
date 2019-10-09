@@ -1,0 +1,21 @@
+#rokuyoDiv{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+
+  .info{
+display:none;
+    max-width: 200px;
+    position: absolute;
+    margin-left: 30px;
+    margin-top: 5px;
+    padding: 10px 20px;
+    font-weight: normal;
+    background-color: rgba(0,0,0,0.5);
+    font-size: 13px;
+  }
+  &:hover{
+    .info {
+      display: block;
+    }
+  }
+}
