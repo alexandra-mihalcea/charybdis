@@ -101,6 +101,12 @@
     padding: 6px;
     background-color: #b3b3b3;
     height: 28px; }
+    .sidemenu select.after-checkbox, .sidemenu input.after-checkbox[type="text"] {
+      position: absolute;
+      flex-grow: 100px;
+      right: 30px;
+      width: 200px;
+      margin-top: -1px; }
   .sidemenu input[type="text"] {
     width: 95%;
     height: 15px; }

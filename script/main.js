@@ -2,15 +2,36 @@
 let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
-let settings = {
+const rokuyoFormats = [
+  {
+    value: '[[NAME]] ([[KANJI]])',
+    description: 'name (kanji)'
+  },
+  {
+    value: '[[NAME]]',
+    description: 'name'
+  },
+  {
+    value: '[[KANJI]]',
+    description: 'kanji'
+  }
+]
+
+const backupSettings = {
     wallpaperAbyssApiKey : '',
     wallpaperUpdateEvery: 5,
     preloadedWallpaper: '',
     hexclock: false,
-    rokuyo:false,
+    rokuyo:{
+      enabled: false,
+      active: '',
+      format: rokuyoFormats
+    },
     overlayColor: '#000',
     opacity: 0.7
 }
+
+let settings = backupSettings
 
 let categories = {
     list:[],
@@ -69,6 +90,11 @@ function setBookmarks(){
 
 }
 
+function resetSettings(){
+  settings = backupSettings
+  setStorage('settings', settings)
+}
+
 function updateSettings(){
     getStorage('settings', function(response) {
         updateCategories()
@@ -80,7 +106,11 @@ function updateSettings(){
         }
         const list = Object.keys(settings)
         list.map(function(key){
-            $('#' + key ).prop('checked', settings[key])
+          if(settings[key].enabled != undefined){
+            $('#' + key ).prop('checked', settings[key].enabled)
+          }
+          else {
+            $('#' + key).prop('checked', settings[key])
             $('#' + key).val(settings[key])
             $('#' + key + ':not([type="checkbox"])').change(function () {
                 const id = $(this).attr('id')
@@ -88,6 +118,7 @@ function updateSettings(){
                 settings[id] = value
                 setStorage('settings', settings)
             })
+        }
         })
         if(settings.hexclock) {
             startTime(true)
@@ -95,9 +126,11 @@ function updateSettings(){
         else {
             setOverlayColor(settings.overlayColor)
         }
-        if(settings.rokuyo){
-          getRokuyo(true);
+      //$('#rokuyo').prop('checked', settings.rokuyo.enabled)
+        if(settings.rokuyo.enabled){
+          getRokuyo(true)
         }
+        setRokuyoFormat()
     })
 
 }
@@ -205,6 +238,10 @@ $(document).ready(function(){
         }
         menu = !menu
     })
+  $('#settingsClear').on('click', function(){
+    resetSettings();
+  })
+
     $('#opacity').on('input', function() {
         settings.opacity = this.value
         $('.overlay').css('opacity', this.value)
@@ -228,17 +265,47 @@ $(document).ready(function(){
     })
 })
 
+
+
+function setRokuyoFormat(){
+  if(settings.rokuyo.format === undefined){
+    settings.rokuyo.format = rokuyoFormats
+  }
+  else {
+    settings.rokuyo.format.map(function (obj) {
+      let selected = ''
+      if (obj.value == settings.rokuyo.active) {
+        selected = 'selected="selected"'
+      }
+      $('#rokuyoFormat').append(' <option value="' + obj.value + '" ' + selected + '>' + obj.description + '</option>')
+    })
+    $('#rokuyoFormat').change(function () {
+      const value = $(this).val()
+      settings.rokuyo.active = value
+      // const item = settings.rokuyo.format.find(function(obj){
+      //       //   return obj.value == settings.rokuyo.active
+      //       // })
+      setStorage('settings', settings)
+      getRokuyo(true)
+    })
+  }
+}
+
+function formatRokuyo(r){
+  let str = settings.rokuyo.active
+  return str.replace('[[NAME]]', r.name).replace('[[KANJI]]', r.kanji)
+}
 function getRokuyo(value){
     if(value) {
         let r = today();
-        document.getElementById('rokuyoDiv').innerHTML = `${r.name} (${r.kanji})<span class="info">${r.description}</span>`
+        document.getElementById('rokuyoDiv').innerHTML = `${formatRokuyo(r)}<span class="info">${r.description}</span>`
         $('#rokuyoDiv').attr('content', r.description)
-        settings['rokuyo'] = value
-        setStorage('settings', settings)
     }
     else{
             document.getElementById('rokuyoDiv').innerHTML =''
         }
+  settings.rokuyo.enabled = value
+  setStorage('settings', settings)
 }
 
 function SetUpKeyBindings(e){

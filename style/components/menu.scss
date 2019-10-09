@@ -91,6 +91,14 @@ $menu-slide-duration: 0.5s;
     padding: 6px;
     background-color: $menu-input-color;
     height:$menu-input-height + 3px;
+
+    &.after-checkbox{
+      position: absolute;
+      flex-grow: 100px;
+      right: 30px;
+      width: 200px;
+      margin-top: -1px;
+    }
   }
   input[type="text"]{
     width: 95%;

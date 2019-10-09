@@ -22,7 +22,7 @@
     <a alt="View next wallpaper" id="historyForward" class="button small disabled"><i class="fas fa-arrow-alt-circle-right"></i></a>
     <a alt="View wallpaper info" id="wallpaperInfo" class="button small"><i class="fas fa-info-circle"></i></a>
     <a alt="Refresh wallpaper" id="refresh" class="button small"><i class="fas fa-sync-alt"></i></a>
-    <a alt="Download wallpaper" id="q" class="button small" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
+    <a alt="Download wallpaper" id="download" class="button small" target="_blank"><i class="fa fa-arrow-alt-circle-down"></i></a>
     <a alt="Copy to clipboard" id="copy" class="button small" clipboard-text=""><i class="fa fa-copy"></i></a>
     <textarea id="clipboardText" class="hidden"></textarea>
     <a alt="Open or close the settings menu" id="settings" class="button small"><i class="fa fa-cog"></i></a>
@@ -90,21 +90,21 @@
             </div>
             </div>
         </div>
-        </div>
-    <div class="container">
-    <h1>Clock</h1>
         <div class="menu-group">
             <div class="div-label">
                 <label for="hexclock" class="menu-label">Hexclock:</label>
             </div>
-                <div class="div-trigger align-left">
-                    <label class="checkbox">
-                        <input type="checkbox" id="hexclock"/>
-                        <span class="checkmark"></span>
-                    </label>
-                    <label id="hexclockDiv"></label>
-                </div>
+            <div class="div-trigger align-left">
+                <label class="checkbox">
+                    <input type="checkbox" id="hexclock"/>
+                    <span class="checkmark"></span>
+                </label>
+                <label id="hexclockDiv"></label>
+            </div>
         </div>
+        </div>
+    <div class="container">
+    <h1>Clock</h1>
         <div class="menu-group">
                 <div class="div-label">
                     <label for="rokuyo" class="menu-label">Rokuyo:</label>
@@ -114,7 +114,14 @@
                 <input type="checkbox" id="rokuyo"/>
                 <span class="checkmark"></span>
             </label>
+             <select id="rokuyoFormat" class="after-checkbox">
+             </select>
          </div>
+        </div>
+        <div class="container">
+            <div class="menu-group">
+                <input type="button" id="settingsClear" value="Reset All Settings"/>
+            </div>
         </div>
             <div class="menu-placeholder"></div>
 </div>
