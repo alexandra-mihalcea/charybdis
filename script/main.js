@@ -1,4 +1,5 @@
 //global variables
+let menu = false
 let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
@@ -18,6 +19,20 @@ const rokuyoFormats = [
 ]
 
 const backupSettings = {
+    wallpaper: {
+        wallpaperAbyssApiKey : '',
+        updateEvery: 5,
+        categories:[],
+        preloaded: '',
+        history: {
+            lastChanged: '',
+
+        }
+    },
+    overlay: {
+        color: '#000',
+        opacity: 0.7
+    },
     wallpaperAbyssApiKey : '',
     wallpaperUpdateEvery: 5,
     preloadedWallpaper: '',
@@ -27,7 +42,7 @@ const backupSettings = {
       active: '',
       format: rokuyoFormats
     },
-    overlayColor: '#000',
+    //overlayColor: '#000',
     opacity: 0.7
 }
 
@@ -62,7 +77,6 @@ let bookmark ={
 
 let wHistory = []
 let wHistoryPos = 0
-let menu = false
 
 let dataStorage = 'online'
 
