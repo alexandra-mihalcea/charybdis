@@ -19,31 +19,17 @@ const rokuyoFormats = [
 ]
 
 const backupSettings = {
-    wallpaper: {
-        wallpaperAbyssApiKey : '',
-        updateEvery: 5,
-        categories:[],
-        preloaded: '',
-        history: {
-            lastChanged: '',
-
-        }
-    },
-    overlay: {
-        color: '#000',
-        opacity: 0.7
-    },
-    wallpaperAbyssApiKey : '',
-    wallpaperUpdateEvery: 5,
-    preloadedWallpaper: '',
-    hexclock: false,
-    rokuyo:{
-      enabled: false,
-      active: '',
-      format: rokuyoFormats
-    },
-    //overlayColor: '#000',
-    opacity: 0.7
+  wallpaperAbyssApiKey : '',
+  categories:[],
+  wallpaperUpdateEvery: 5,
+  preloadedWallpaper: '',
+  wHistory: [],
+  //wallpaperLastChanged: '',
+  hexclock: false,
+  rokuyo:false,
+  rokuyoFormat: 0,
+  overlayColor: '#000',
+  opacity: 0.7
 }
 
 let settings = backupSettings
@@ -60,12 +46,6 @@ let bookmarks = [
     //     url:'https://www.reddit.com',
     //     image:'https://i.imgur.com/ws2kAA0.png',
     //     title:'reddit'
-    // },
-    //
-    // {
-    //     url:'https://www.youtube.com/',
-    //     image:'http://www.myiconfinder.com/uploads/iconsets/256-256-3a1eef40f04875d93dd6545f2f1b727e-youtube.png',
-    //     title:'youtube'
     // }
 ]
 
@@ -106,6 +86,7 @@ function setBookmarks(){
 
 function resetSettings(){
   settings = backupSettings
+  generateNotification("settings have been reset")
   setStorage('settings', settings)
 }
 
@@ -120,10 +101,6 @@ function updateSettings(){
         }
         const list = Object.keys(settings)
         list.map(function(key){
-          if(settings[key].enabled != undefined){
-            $('#' + key ).prop('checked', settings[key].enabled)
-          }
-          else {
             $('#' + key).prop('checked', settings[key])
             $('#' + key).val(settings[key])
             $('#' + key + ':not([type="checkbox"])').change(function () {
@@ -132,7 +109,6 @@ function updateSettings(){
                 settings[id] = value
                 setStorage('settings', settings)
             })
-        }
         })
         if(settings.hexclock) {
             startTime(true)
@@ -140,8 +116,7 @@ function updateSettings(){
         else {
             setOverlayColor(settings.overlayColor)
         }
-      //$('#rokuyo').prop('checked', settings.rokuyo.enabled)
-        if(settings.rokuyo.enabled){
+        if(settings.rokuyo){
           getRokuyo(true)
         }
         setRokuyoFormat()
@@ -282,31 +257,28 @@ $(document).ready(function(){
 
 
 function setRokuyoFormat(){
-  if(settings.rokuyo.format === undefined){
-    settings.rokuyo.format = rokuyoFormats
+  if(settings.rokuyoFormat === undefined){
+    settings.rokuyo= false
   }
   else {
-    settings.rokuyo.format.map(function (obj) {
+    rokuyoFormats.map(function (obj) {
       let selected = ''
-      if (obj.value == settings.rokuyo.active) {
+      if (obj.value == settings.rokuyoFormat) {
         selected = 'selected="selected"'
       }
-      $('#rokuyoFormat').append(' <option value="' + obj.value + '" ' + selected + '>' + obj.description + '</option>')
+      $('#rokuyoFormats').append(' <option value="' + obj.value + '" ' + selected + '>' + obj.description + '</option>')
     })
-    $('#rokuyoFormat').change(function () {
+    $('#rokuyoFormats').change(function () {
       const value = $(this).val()
-      settings.rokuyo.active = value
-      // const item = settings.rokuyo.format.find(function(obj){
-      //       //   return obj.value == settings.rokuyo.active
-      //       // })
+      settings.rokuyoFormat = value
       setStorage('settings', settings)
-      getRokuyo(true)
+      getRokuyo(value)
     })
   }
 }
 
 function formatRokuyo(r){
-  let str = settings.rokuyo.active
+  let str = settings.rokuyoFormat
   return str.replace('[[NAME]]', r.name).replace('[[KANJI]]', r.kanji)
 }
 function getRokuyo(value){
@@ -318,7 +290,7 @@ function getRokuyo(value){
     else{
             document.getElementById('rokuyoDiv').innerHTML =''
         }
-  settings.rokuyo.enabled = value
+  settings.rokuyo = value
   setStorage('settings', settings)
 }
 
@@ -418,7 +390,6 @@ function getWallpaper(refresh = false){
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
                 $.ajax({
-                    //url:'https://wall.alphacoders.com/api2.0/get.php?auth='+wallpaperAbyssApiKey+'&method=random&info_level=1&count=1&category=anime',
                     url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages) +'&info_level=3',
                     complete: function (response) {
                         const result = JSON.parse(response.responseText)
