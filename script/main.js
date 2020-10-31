@@ -393,10 +393,20 @@ function getWallpaper(refresh = false) {
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
             $.ajax({
-                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm) + '&page=' + randomInt(1, 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
+                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
                 complete: function (response) {
                     const result = JSON.parse(response.responseText)
                     console.log(result)
+                    if (result && result.success && result.total_match && !result.wallpapers) {
+                        let availablePages = Math.floor(Number(result.total_match) / 30)
+                        if (isNaN(availablePages) || availablePages <= 0) {
+                            generateNotification('no wallpapers found matching that criteria')
+                        } else {
+                            settings.searchTermMaxPages = availablePages
+                            getWallpaper(true)
+                            return;
+                        }
+                    }
                     settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
                     setStorage('settings', settings)
                     const wallpaper = result.wallpapers[randomInt(0, 29)]
