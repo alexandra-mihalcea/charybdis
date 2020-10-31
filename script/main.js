@@ -242,10 +242,13 @@ $(document).ready(function () {
         }
     })
     $('#searchTerm').on('change', function () {
-        this.value = this.value.replaceAll(' ', '+')
         settings.searchTerm = this.value
         setStorage('settings', settings)
         getWallpaper(true)
+    })
+    $('#clockFormat').on('change', function () {
+        settings.clockFormat = this.value
+        setStorage('settings', settings)
     })
     $('#wallpaperInfo').on('click', function () {
         getWallpaperInfo();
@@ -393,7 +396,7 @@ function getWallpaper(refresh = false) {
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
             $.ajax({
-                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
+                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm.replaceAll(' ', '+')) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
                 complete: function (response) {
                     const result = JSON.parse(response.responseText)
                     console.log(result)
