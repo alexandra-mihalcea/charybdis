@@ -4,39 +4,39 @@ let img_url = ''
 const dateFormat = 'ddd, DD MMM'
 
 const rokuyoFormats = [
-  {
-    value: '[[NAME]] ([[KANJI]])',
-    description: 'name (kanji)'
-  },
-  {
-    value: '[[NAME]]',
-    description: 'name'
-  },
-  {
-    value: '[[KANJI]]',
-    description: 'kanji'
-  }
+    {
+        value: '[[NAME]] ([[KANJI]])',
+        description: 'name (kanji)'
+    },
+    {
+        value: '[[NAME]]',
+        description: 'name'
+    },
+    {
+        value: '[[KANJI]]',
+        description: 'kanji'
+    }
 ]
 
 const backupSettings = {
-  wallpaperAbyssApiKey : '',
-  categories:[],
-  wallpaperUpdateEvery: 5,
-  preloadedWallpaper: '',
-  wHistory: [],
-  //wallpaperLastChanged: '',
-  hexclock: false,
-  rokuyo:false,
-  rokuyoFormat: 0,
-  overlayColor: '#000',
-  opacity: 0.7
+    wallpaperAbyssApiKey: '',
+    categories: [],
+    wallpaperUpdateEvery: 5,
+    preloadedWallpaper: '',
+    wHistory: [],
+    //wallpaperLastChanged: '',
+    hexclock: false,
+    rokuyo: false,
+    rokuyoFormat: 0,
+    overlayColor: '#000',
+    opacity: 0.7
 }
 
 let settings = backupSettings
 
 let categories = {
-    list:[],
-    lastUpdatedAt:'',
+    list: [],
+    lastUpdatedAt: '',
     active: 1,
     pages: 100
 }
@@ -49,7 +49,7 @@ let bookmarks = [
     // }
 ]
 
-let bookmark ={
+let bookmark = {
     url: '',
     image: '',
     title: ''
@@ -66,9 +66,9 @@ const bookmarkTemplate = `
     </div>
 `
 
-function generateBookmarks(){
-    if(bookmarks && bookmarks.length){
-        for(let x =0; x< bookmarks.length; x++){
+function generateBookmarks() {
+    if (bookmarks && bookmarks.length) {
+        for (let x = 0; x < bookmarks.length; x++) {
             let html = bookmarkTemplate.replace('[[URL]]', bookmarks[x].url)
             html = html.replace('[[URL]]', bookmarks[x].image)
             $('#bookmarksMenu').append(html)
@@ -76,31 +76,30 @@ function generateBookmarks(){
     }
 }
 
-function getBookmarks(){
+function getBookmarks() {
 
 }
 
-function setBookmarks(){
+function setBookmarks() {
 
 }
 
-function resetSettings(){
-  settings = backupSettings
-  generateNotification("settings have been reset")
-  setStorage('settings', settings)
+function resetSettings() {
+    settings = backupSettings
+    generateNotification("settings have been reset")
+    setStorage('settings', settings)
 }
 
-function updateSettings(){
-    getStorage('settings', function(response) {
+function updateSettings() {
+    getStorage('settings', function (response) {
         updateCategories()
         if (response && response.settings) {
             settings = response.settings
-        }
-        else {
+        } else {
             setStorage('settings', settings)
         }
         const list = Object.keys(settings)
-        list.map(function(key){
+        list.map(function (key) {
             $('#' + key).prop('checked', settings[key])
             $('#' + key).val(settings[key])
             $('#' + key + ':not([type="checkbox"])').change(function () {
@@ -110,22 +109,21 @@ function updateSettings(){
                 setStorage('settings', settings)
             })
         })
-        if(settings.hexclock) {
+        if (settings.hexclock) {
             startTime(true)
-        }
-        else {
+        } else {
             setOverlayColor(settings.overlayColor)
         }
-        if(settings.rokuyo){
-          getRokuyo(true)
+        if (settings.rokuyo) {
+            getRokuyo(true)
         }
         setRokuyoFormat()
     })
 
 }
 
-function updateCategories(){
-    getStorage('categories', function(res) {
+function updateCategories() {
+    getStorage('categories', function (res) {
         if (res && res.categories && res.categories.list) {
             categories = res.categories
             generateCategories()
@@ -137,28 +135,28 @@ function updateCategories(){
     })
 }
 
-function generateCategories(){
+function generateCategories() {
     categories.list.map(function (obj) {
         let selected = ''
-        if (obj.id == categories.active){
+        if (obj.id == categories.active) {
             selected = 'selected="selected"'
         }
-        $('#wallpaperCategories').append(' <option value="' + obj.id + '" '+selected+'>' + obj.name +'</option>')
+        $('#wallpaperCategories').append(' <option value="' + obj.id + '" ' + selected + '>' + obj.name + '</option>')
     })
     $('#wallpaperCategories').change(function () {
         const value = $(this).val()
         categories.active = value
-        const item = categories.list.find(function(obj){
+        const item = categories.list.find(function (obj) {
             return obj.id == categories.active
         })
         settings.preloadedWallpaper = ''
-        categories.pages = Math.floor(item.count/30)
+        categories.pages = Math.floor(item.count / 30)
         setStorage('categories', categories)
         getWallpaper(true)
     })
 }
 
-function getCategories(){
+function getCategories() {
     $.ajax({
         url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category_list',
         complete: function (response) {
@@ -173,7 +171,7 @@ function getCategories(){
     })
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     updateSettings()
     trackStorage()
     getHistory()
@@ -181,10 +179,10 @@ $(document).ready(function(){
     formatDate()
     generateBookmarks()
     document.onkeydown = SetUpKeyBindings
-    $('#refresh').on('click', function(){
+    $('#refresh').on('click', function () {
         getWallpaper(true)
     })
-    $('#copy').on('click', function(){
+    $('#copy').on('click', function () {
         let copyText = document.getElementById('clipboardText')
         //copyText.value = wHistory[wHistory.length -1]
         copyText.focus()
@@ -192,113 +190,111 @@ $(document).ready(function(){
         document.execCommand("copy")
         generateNotification('copied to clipboard')
     })
-    $('#historyForward').on('click', function(){
+    $('#historyForward').on('click', function () {
         browseHistory(1)
     })
-    $('#historyBack').on('click', function(){
+    $('#historyBack').on('click', function () {
         browseHistory(-1)
     })
 
-    $('#historyClear').on('click', function(){
+    $('#historyClear').on('click', function () {
         clearHistory()
         generateNotification('wallpaper history cleared')
     })
-    $('#hexclock').on('click', function(){
+    $('#hexclock').on('click', function () {
         let res = $('#hexclock').is(':checked')
         //$('#hexclock').val(res)
         console.log(res)
         settings.hexclock = res
         setStorage('settings', settings)
-        if(!res){
+        if (!res) {
             $('.overlay').css('background-color', settings.overlayColor)
-            document.getElementById('hexclockDiv').innerHTML =''
-        }
-        else{
+            document.getElementById('hexclockDiv').innerHTML = ''
+        } else {
             startTime(true)
         }
     })
 
-    $('#settings').on('click', function(){
-        if(!menu){
+    $('#settings').on('click', function () {
+        if (!menu) {
             openMenu()
-        }
-        else{
+        } else {
             closeMenu()
         }
         menu = !menu
     })
-  $('#settingsClear').on('click', function(){
-    resetSettings();
-  })
+    $('#settingsClear').on('click', function () {
+        resetSettings();
+    })
 
-    $('#opacity').on('input', function() {
+    $('#opacity').on('input', function () {
         settings.opacity = this.value
         $('.overlay').css('opacity', this.value)
     })
-    $('#overlayColor').on('change', function (){
-        if(this.value) {
+    $('#overlayColor').on('change', function () {
+        if (this.value) {
             setOverlayColor(this.value)
             settings.overlayColor = this.value
             settings.hexclock = false
             $('#hexclock').prop('checked', false)
-            document.getElementById('hexclockDiv').innerHTML =''
+            document.getElementById('hexclockDiv').innerHTML = ''
             setStorage('settings', settings)
         }
     })
-    $('#wallpaperSearchTerm').on('change', function (){
+    $('#searchTerm').on('change', function () {
+        this.value = this.value.replaceAll(' ', '+')
         settings.searchTerm = this.value
         setStorage('settings', settings)
+        getWallpaper(true)
     })
-    $('#wallpaperInfo').on('click', function (){
+    $('#wallpaperInfo').on('click', function () {
         getWallpaperInfo();
     })
-    $('#rokuyo').on('click', function (){
-      let res = $(this).is(':checked')
+    $('#rokuyo').on('click', function () {
+        let res = $(this).is(':checked')
         getRokuyo(res)
     })
 })
 
 
-
-function setRokuyoFormat(){
-  if(settings.rokuyoFormat === undefined){
-    settings.rokuyo= false
-  }
-  else {
-    rokuyoFormats.map(function (obj) {
-      let selected = ''
-      if (obj.value == settings.rokuyoFormat) {
-        selected = 'selected="selected"'
-      }
-      $('#rokuyoFormats').append(' <option value="' + obj.value + '" ' + selected + '>' + obj.description + '</option>')
-    })
-    $('#rokuyoFormats').change(function () {
-      const value = $(this).val()
-      settings.rokuyoFormat = value
-      setStorage('settings', settings)
-      getRokuyo(value)
-    })
-  }
+function setRokuyoFormat() {
+    if (settings.rokuyoFormat === undefined) {
+        settings.rokuyo = false
+    } else {
+        rokuyoFormats.map(function (obj) {
+            let selected = ''
+            if (obj.value == settings.rokuyoFormat) {
+                selected = 'selected="selected"'
+            }
+            $('#rokuyoFormats').append(' <option value="' + obj.value + '" ' + selected + '>' + obj.description + '</option>')
+        })
+        $('#rokuyoFormats').change(function () {
+            const value = $(this).val()
+            settings.rokuyoFormat = value
+            setStorage('settings', settings)
+            getRokuyo(value)
+        })
+    }
 }
 
-function formatRokuyo(r){
-  let str = settings.rokuyoFormat
-  return str.replace('[[NAME]]', r.name).replace('[[KANJI]]', r.kanji)
+function formatRokuyo(r) {
+    let str = settings.rokuyoFormat
+    return str.replace('[[NAME]]', r.name).replace('[[KANJI]]', r.kanji)
 }
-function getRokuyo(value){
-    if(value) {
+
+function getRokuyo(value) {
+    if (value) {
         let r = today();
         document.getElementById('rokuyoDiv').innerHTML = `${formatRokuyo(r)}<span class="info">${r.description}</span>`
         $('#rokuyoDiv').attr('content', r.description)
+    } else {
+        document.getElementById('rokuyoDiv').innerHTML = ''
     }
-    else{
-            document.getElementById('rokuyoDiv').innerHTML =''
-        }
-  settings.rokuyo = value
-  setStorage('settings', settings)
+    settings.rokuyo = value
+    setStorage('settings', settings)
 }
 
-function SetUpKeyBindings(e){
+function SetUpKeyBindings(e) {
     let obj = {
         37: () => {
             browseHistory(-1)
@@ -307,61 +303,61 @@ function SetUpKeyBindings(e){
             getWallpaperInfo();
         }, //up
         39: () => {
-            if(wHistoryPos +1 >= wHistory.length){
+            if (wHistoryPos + 1 >= wHistory.length) {
                 getWallpaper(true)
-            }
-            else {
+            } else {
                 browseHistory(1)
             }
         }, //right
         40: () => {
-            if($('#download').attr('href') && $('#download').attr('href') !== '')
-            window.open($('#download').attr('href'),'_blank')
+            if ($('#download').attr('href') && $('#download').attr('href') !== '')
+                window.open($('#download').attr('href'), '_blank')
         }
     }
     let x = obj[e.keyCode]
-    if(x)
+    if (x)
         x()
 }
 
-function getWallpaperInfo(){
+function getWallpaperInfo() {
     let w = wHistory[wHistoryPos]
     let collection = 'unknown'
-    if(w.collection){
+    if (w && w.collection) {
         collection = `${w.collection} (${w.collection_id})`
     }
     generateNotification([
-    `id: ${w.id}`,
-    `category: ${w.category} (${w.category_id})`,
-    `collection: ${collection}`,
-    `size: ${w.file_size}`,
-    `type: ${w.file_type}`,
-    `user: ${w.user_name}`,
-    `width: ${w.width}`,
-    `height: ${w.height}`
+        `id: ${w.id}`,
+        `category: ${w.category} (${w.category_id})`,
+        `collection: ${collection}`,
+        `size: ${w.file_size}`,
+        `type: ${w.file_type}`,
+        `user: ${w.user_name}`,
+        `width: ${w.width}`,
+        `height: ${w.height}`
     ].join('</br>'), 9999, true)
 }
 
-function setOverlayColor(color = '#fff'){
-$('.overlay').css('background-color',color);
+function setOverlayColor(color = '#fff') {
+    $('.overlay').css('background-color', color);
 }
 
-function formatDate(){
+function formatDate() {
     $('#date').html(moment().format("ddd, DD MMM"))
 }
 
-function addZeroToTime(input){
-    return ('0'+ input).substr(-2)
+function addZeroToTime(input) {
+    return ('0' + input).substr(-2)
 }
+
 function startTime(bypass = false) {
     let today = new Date()
     let d = today.getDay()
     let h = today.getHours()
     let m = today.getMinutes()
     let s = today.getSeconds()
-    if((settings && settings.hexclock && settings.hexclock === true && s%10 === 0)||(bypass)){
-        let hextime = '#' + (addZeroToTime(h)+ addZeroToTime(m) + addZeroToTime(s))
-        $('.overlay').css('background-color',  hextime)
+    if ((settings && settings.hexclock && settings.hexclock === true && s % 10 === 0) || (bypass)) {
+        let hextime = '#' + (addZeroToTime(h) + addZeroToTime(m) + addZeroToTime(s))
+        $('.overlay').css('background-color', hextime)
         document.getElementById('hexclockDiv').innerHTML = hextime
     }
     h = formatTime(h)
@@ -370,62 +366,73 @@ function startTime(bypass = false) {
         h + ':' + m
     setTimeout(startTime, 1000)
 }
+
 function formatTime(i) {
-    if (i < 10) {i = '0' + i}  // add zero in front of numbers < 10
+    if (i < 10) {
+        i = '0' + i
+    }  // add zero in front of numbers < 10
     return i
 }
 
-function randomInt(min, max){
+function randomInt(min, max) {
     return Math.floor((Math.random() * max) + min)
 }
 
-function getWallpaper(refresh = false){
-    getStorage('wallpaperLastChanged', function(result) {
-        const now =  new moment()
+function getWallpaper(refresh = false) {
+    getStorage('wallpaperLastChanged', function (result) {
+        const now = new moment()
         const lastUpdated = moment(result.wallpaperLastChanged)
         const duration = moment.duration(now.diff(lastUpdated))
         const preloaded = settings.preloadedWallpaper && settings.preloadedWallpaper.url_image
-        if(duration.asMinutes() > settings.wallpaperUpdateEvery || refresh || !wHistory.length) {
-            if(preloaded) {
+        if (duration.asMinutes() > settings.wallpaperUpdateEvery || refresh || !wHistory.length) {
+            if (preloaded) {
                 updateBackground(settings.preloadedWallpaper.url_image)
                 setHistory(settings.preloadedWallpaper)
                 settings.preloadedWallpaper = ''
             }
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
-                $.ajax({
-                    url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + '&method=category&id='+categories.active+'&page=' + randomInt(1, categories.pages) +'&info_level=3',
-                    complete: function (response) {
-                        const result = JSON.parse(response.responseText)
-                        console.log(result)
-                        settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
-                        setStorage('settings', settings)
-                        const wallpaper = result.wallpapers[randomInt(0, 29)]
-                        img_url = wallpaper.url_image
-                        console.log(wallpaper)
-                        if(!preloaded) {
-                            updateBackground(img_url)
-                            setHistory(wallpaper)
+            $.ajax({
+                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
+                complete: function (response) {
+                    const result = JSON.parse(response.responseText)
+                    console.log(result)
+                    if (result && result.success && result.total_match && !result.wallpapers) {
+                        let availablePages = Math.floor(Number(result.total_match) / 30)
+                        if (isNaN(availablePages) || availablePages <= 0) {
+                            generateNotification('no wallpapers found matching that criteria')
+                        } else {
+                            settings.searchTermMaxPages = availablePages
+                            getWallpaper(true)
+                            return;
                         }
-                    },
-                    error: function () {
-                        console.log('Warning: there was an error!')
                     }
-                })
-           }
-        else{
+                    settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
+                    setStorage('settings', settings)
+                    const wallpaper = result.wallpapers[randomInt(0, 29)]
+                    img_url = wallpaper.url_image
+                    console.log(wallpaper)
+                    if (!preloaded) {
+                        updateBackground(img_url)
+                        setHistory(wallpaper)
+                    }
+                },
+                error: function () {
+                    console.log('Warning: there was an error!')
+                }
+            })
+        } else {
             updateBackground(wHistory[wHistory.length - 1].url_image)
         }
     })
 }
 
 
-function updateBackground(img){
+function updateBackground(img) {
     $('#background').css('background-image', 'url(' + img + ')')
     $('#download').attr('href', img)
     $('#clipboardText').val(img)
 }
-
 
 
 function openMenu() {
@@ -441,46 +448,45 @@ function closeMenu() {
 
 // chrome storage
 
-function trackStorage(){
-    chrome.storage.onChanged.addListener(function (changes, areaName){
+function trackStorage() {
+    chrome.storage.onChanged.addListener(function (changes, areaName) {
         console.log('storage updated at', moment().format('HH:mm'), ' with the changes', changes, ' in area', areaName)
     })
 }
 
-function setStorage(key, value){
-    if(dataStorage == 'online'){
-        chrome.storage.sync.set({[key]: value}, function(){})
-    }
-    else{
-        chrome.storage.local.set({[key]: value}, function(){})
+function setStorage(key, value) {
+    if (dataStorage == 'online') {
+        chrome.storage.sync.set({[key]: value}, function () {
+        })
+    } else {
+        chrome.storage.local.set({[key]: value}, function () {
+        })
     }
 }
 
-function getStorage(key, callback){
-    if(dataStorage == 'online'){
-        chrome.storage.sync.get([key],  callback)
-    }
-    else{
+function getStorage(key, callback) {
+    if (dataStorage == 'online') {
+        chrome.storage.sync.get([key], callback)
+    } else {
         chrome.storage.local.get([key], callback)
     }
 }
 
 // wallpaper history
 
-function getHistory(){
-   getStorage('wallpaperHistory', function(response) {
-       if (response && response.wallpaperHistory) {
-           wHistory = response.wallpaperHistory
-           wHistoryPos = wHistory.length - 1
-       }
-       else {
-           wHistory = []
-       }
-   })
+function getHistory() {
+    getStorage('wallpaperHistory', function (response) {
+        if (response && response.wallpaperHistory) {
+            wHistory = response.wallpaperHistory
+            wHistoryPos = wHistory.length - 1
+        } else {
+            wHistory = []
+        }
+    })
 }
 
-function setHistory(item){
-    if(item) {
+function setHistory(item) {
+    if (item) {
         if (wHistory.length >= 10) {
             wHistory = wHistory.slice(wHistory.length - 9, wHistory.length)
         }
@@ -491,15 +497,15 @@ function setHistory(item){
     setStorage('wallpaperHistory', wHistory)
 }
 
-function clearHistory(){
+function clearHistory() {
     wHistory = []
     setStorage('wallpaperHistory', [])
     updateHistoryButtons()
 }
 
-function browseHistory(amount = 1){
+function browseHistory(amount = 1) {
     let newPos = wHistoryPos + amount
-    if(newPos <= wHistory.length -1 && newPos >= 0 ) {
+    if (newPos <= wHistory.length - 1 && newPos >= 0) {
         updateBackground(wHistory[newPos].url_image)
         wHistoryPos = newPos
         generateNotification((newPos + 1) + '/' + wHistory.length)
@@ -507,55 +513,51 @@ function browseHistory(amount = 1){
     }
 }
 
-function updateHistoryButtons(){
-    if (0 >= wHistory.length -1 ){
+function updateHistoryButtons() {
+    if (0 >= wHistory.length - 1) {
         $('#historyForward, #historyBack').addClass('disabled')
-    }
-    else if(wHistoryPos <= 0)
-    {
+    } else if (wHistoryPos <= 0) {
         $('#historyBack').addClass('disabled')
         $('#historyForward').removeClass('disabled')
-    }
-    else if (wHistoryPos >= wHistory.length-1){
+    } else if (wHistoryPos >= wHistory.length - 1) {
         $('#historyForward').addClass('disabled')
         $('#historyBack').removeClass('disabled')
-    }
-    else{
+    } else {
         $('#historyForward, #historyBack').removeClass('disabled')
     }
 }
 
 // notification
 var animationTimer, clearTimer
-function generateNotification(innerText = '', timer = 1500, dismiss = false){
+
+function generateNotification(innerText = '', timer = 1500, dismiss = false) {
     dismissOverlay = ''
-    if(dismiss){
+    if (dismiss) {
         dismissOverlay = '<div class="notification-overlay"></div>'
     }
     clearNotifications()
-    let el = $(dismissOverlay + '<div class="notification"><p>'+ innerText +'</p></div>').appendTo('body')
+    let el = $(dismissOverlay + '<div class="notification"><p>' + innerText + '</p></div>').appendTo('body')
 
-    animationTimer = setTimeout( function(){
+    animationTimer = setTimeout(function () {
         dismissNotification(el)
     }, timer)
 
 
-    $('.notification-overlay, .container-clock').on('click', function(){
+    $('.notification-overlay, .container-clock').on('click', function () {
         dismissNotification()
     })
 }
 
 function dismissNotification(el = undefined) {
-    if(el){
+    if (el) {
         $(el).addClass('slide-out')
-    }
-    else{
+    } else {
         $('.notification').addClass('slide-out')
     }
     $('.notification-overlay').remove()
 }
 
-function clearNotifications(){
-     $($(".notification").splice(0,$(".notification").length - 1 - 1)).remove()
-     $(".notification").addClass('slide-out')
+function clearNotifications() {
+    $($(".notification").splice(0, $(".notification").length - 1 - 1)).remove()
+    $(".notification").addClass('slide-out')
 }
