@@ -245,6 +245,10 @@ $(document).ready(function(){
             setStorage('settings', settings)
         }
     })
+    $('#wallpaperSearchTerm').on('change', function (){
+        settings.searchTerm = this.value
+        setStorage('settings', settings)
+    })
     $('#wallpaperInfo').on('click', function (){
         getWallpaperInfo();
     })
