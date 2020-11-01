@@ -56,6 +56,34 @@
         </div>
         <div class="menu-group">
             <div class="div-label">
+                <label for="wallpaperWidth" class="menu-label">Width:</label>
+            </div>
+            <div class="div-trigger">
+                <input id="wallpaperWidth" type="text"/>
+            </div>
+        </div>
+        <div class="menu-group">
+            <div class="div-label">
+                <label for="wallpaperHeight" class="menu-label">Height:</label>
+            </div>
+            <div class="div-trigger">
+                <input id="wallpaperHeight" type="text"/>
+            </div>
+        </div>
+        <div class="menu-group">
+            <div class="div-label">
+                <label for="searchTerm" class="menu-label">Size filter:</label>
+            </div>
+            <div class="div-trigger">
+                <select id="wallpaperSizeOperator">
+                    <option value="min">bigger than</option>
+                    <option value="equal">equal to</option>
+                    <option value="max">smaller than</option>
+                </select>
+            </div>
+        </div>
+        <div class="menu-group">
+            <div class="div-label">
                 <label for="wallpaperCategories" class="menu-label">Category:</label>
             </div>
             <div class="div-trigger">
@@ -123,7 +151,7 @@
                     <option value="24">24hr</option>
                     <option value="12">12hr</option>
                     <option value="hexclock">Hexclock</option>
-                    <option value="chinese zodiac">Chinese Zodiac</option>
+                    <option value="zodiac">Chinese Zodiac</option>
                 </select>
             </div>
         </div>

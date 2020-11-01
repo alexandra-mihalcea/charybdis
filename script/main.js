@@ -244,6 +244,25 @@ $(document).ready(function () {
     $('#searchTerm').on('change', function () {
         settings.searchTerm = this.value
         setStorage('settings', settings)
+        settings.preloadedWallpaper = null;
+        getWallpaper(true)
+    })
+    $('#wallpaperWidth').on('change', function () {
+        settings.wallpaperWidth = this.value
+        setStorage('settings', settings)
+        settings.preloadedWallpaper = null;
+        getWallpaper(true)
+    })
+    $('#wallpaperHeight').on('change', function () {
+        settings.wallpaperHeight = this.value
+        setStorage('settings', settings)
+        settings.preloadedWallpaper = null;
+        getWallpaper(true)
+    })
+    $('#wallpaperSizeOperator').on('change', function () {
+        settings.wallpaperSizeOperator = this.value
+        setStorage('settings', settings)
+        settings.preloadedWallpaper = null;
         getWallpaper(true)
     })
     $('#clockFormat').on('change', function () {
@@ -352,21 +371,73 @@ function addZeroToTime(input) {
     return ('0' + input).substr(-2)
 }
 
+function chineseZodiac() {
+    let now = new Date().getHours()
+    let animal = 'rat'
+   if(21 <= now && now <= 23) {
+       animal = 'pig'
+   }
+   else if(19 <= now && now <= 21) {
+
+       animal = 'dog'
+   }
+   else if( 17 <= now && now <= 19){
+            animal = 'rooster'
+   }
+   else if(15 <= now && now <= 17){
+       animal = 'monkey'
+   }
+   else if(13 <= now && now <= 15){
+       animal = 'monkey'
+   }
+   else if(11 <= now && now <= 13){
+       animal = 'monkey'
+   }
+   else if(9 <= now && now <= 11){
+       animal = 'snake'
+   }
+   else if(7 <= now && now <= 9){
+       animal = 'dragon'
+   }
+   else if(5 <= now && now <=7){
+       animal = 'rabbit'
+   }
+   else if(3 <= now && now <=5){
+       animal = 'tiger'
+   }
+   else if(1 <= now && now <=3){
+       animal = 'ox'
+   }
+    return 'hour of the ' + animal
+}
+
 function startTime(bypass = false) {
     let today = new Date()
     let d = today.getDay()
     let h = today.getHours()
     let m = today.getMinutes()
     let s = today.getSeconds()
+    let hexTime = '#' + (addZeroToTime(h) + addZeroToTime(m) + addZeroToTime(s))
     if ((settings && settings.hexclock && settings.hexclock === true && s % 10 === 0) || (bypass)) {
-        let hextime = '#' + (addZeroToTime(h) + addZeroToTime(m) + addZeroToTime(s))
-        $('.overlay').css('background-color', hextime)
-        document.getElementById('hexclockDiv').innerHTML = hextime
+        $('.overlay').css('background-color', hexTime)
+        document.getElementById('hexclockDiv').innerHTML = hexTime
     }
-    h = formatTime(h)
-    m = formatTime(m)
-    document.getElementById('clock').innerHTML =
-        h + ':' + m
+    let clockFormat = formatTime(h) + ':' + formatTime(m)
+    if (settings.clockFormat) {
+        switch (settings.clockFormat) {
+            case '12':
+                clockFormat = h >= 12 ? 'PM' : 'AM'
+                clockFormat = h % 12 + ':' + formatTime(m) + clockFormat
+                break
+            case 'hexclock':
+                clockFormat = hexTime
+                break
+            case 'zodiac':
+                clockFormat = chineseZodiac()
+                break
+        }
+    }
+    document.getElementById('clock').innerHTML = clockFormat
     setTimeout(startTime, 1000)
 }
 
@@ -396,23 +467,25 @@ function getWallpaper(refresh = false) {
             const timestamp = new moment().toISOString()
             setStorage('wallpaperLastChanged', timestamp)
             $.ajax({
-                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm.replaceAll(' ', '+')) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3',
+                url: 'https://wall.alphacoders.com/api2.0/get.php?auth=' + settings.wallpaperAbyssApiKey + (settings.searchTerm && settings.searchTerm.trim() !== '' ? '&method=search&term=' + encodeURI(settings.searchTerm.replaceAll(' ', '+')) + '&page=' + randomInt(1, settings.searchTermMaxPages || 100) : '&method=category&id=' + categories.active + '&page=' + randomInt(1, categories.pages)) + '&info_level=3' + (settings.wallpaperWidth && settings.wallpaperHeight && settings.wallpaperSizeOperator ? '&width=' + settings.wallpaperWidth + '&height=' + settings.wallpaperHeight + '&operator=' + settings.wallpaperSizeOperator : ''),
                 complete: function (response) {
                     const result = JSON.parse(response.responseText)
                     console.log(result)
                     if (result && result.success && result.total_match && !result.wallpapers) {
-                        let availablePages = Math.floor(Number(result.total_match) / 30)
+                        let availablePages = Math.ceil(Number(result.total_match) / 30)
                         if (isNaN(availablePages) || availablePages <= 0) {
                             generateNotification('no wallpapers found matching that criteria')
+                            return
                         } else {
                             settings.searchTermMaxPages = availablePages
                             getWallpaper(true)
                             return;
                         }
                     }
-                    settings.preloadedWallpaper = result.wallpapers[randomInt(0, 29)]
+                    let maxPageItem = Math.min(Number(result.total_match) || 29, 29)
+                    settings.preloadedWallpaper = result.wallpapers[randomInt(0, maxPageItem)]
                     setStorage('settings', settings)
-                    const wallpaper = result.wallpapers[randomInt(0, 29)]
+                    const wallpaper = result.wallpapers[randomInt(0, maxPageItem)]
                     img_url = wallpaper.url_image
                     console.log(wallpaper)
                     if (!preloaded) {
